@@ -1,0 +1,9 @@
+name: GuildBattles
+version: ${project.version}
+main: locb.both.guildbattles.GuildBattles
+api-version: 1.17
+commands:
+  guild:
+    description: Main guilds command
+    aliases: [g, guild]
+    ussage: /guild <args>
