@@ -12,15 +12,17 @@ public class Guild {
     private long createDate;
     private String leader;
     private double balance;
+    private boolean allowFriendlyFire;
 
     private List<Member> members;
 
-    public Guild(int id, String name, long createDate, String leader, double balance) {
+    public Guild(int id, String name, long createDate, String leader, double balance, boolean allowFriendlyFire) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;
         this.leader = leader;
         this.balance = balance;
+        this.allowFriendlyFire = allowFriendlyFire;
     }
 
     public int getId() {
@@ -61,6 +63,14 @@ public class Guild {
 
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    public boolean isAllowFriendlyFire() {
+        return allowFriendlyFire;
+    }
+
+    public void setAllowFriendlyFire(boolean allowFriendlyFire) {
+        this.allowFriendlyFire = allowFriendlyFire;
     }
 
     public void loadGuildMembers(){

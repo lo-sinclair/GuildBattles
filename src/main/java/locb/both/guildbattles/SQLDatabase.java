@@ -55,6 +55,7 @@ public class SQLDatabase {
                 + "`name` VARCHAR(30) NOT NULL,"
                 + "`create_date` TIMESTAMP NOT NULL,"
                 + "`leader` VARCHAR(30) NOT NULL,"
+                + "`allow_friendly_fire TINYINT(1) DEFAULT 0`"
                 + "`balance` DOUBLE(64, 2) DEFAULT 0.0);"
         ;
 
@@ -85,15 +86,15 @@ public class SQLDatabase {
             Statement stmt = conn.createStatement();
 
 
-
-            String q = "INSERT INTO gb_guilds (`name`, `create_date`, `leader`, `balance`) "
+            String q = "INSERT INTO gb_guilds (`name`, `create_date`, `leader`, `balance`, `allow_friendly_fire`) "
                     + "VALUES ('%s', %d, '%s', %.2f);";
 
             count = stmt.executeUpdate(String.format(Locale.ROOT, q,
                     guild.getName(),
                     guild.getCreateDate(),
                     guild.getLeader(),
-                    0.0
+                    guild.getBalance(),
+                    guild.isAllowFriendlyFire()
             ));
 
             ResultSet keys = stmt.getGeneratedKeys();
@@ -227,14 +228,14 @@ public class SQLDatabase {
 
             if(result.next()) {
                 guild = new Guild(
-                     result.getInt("id"),
-                     result.getString("name"),
-                     result.getLong("create_date"),
-                     result.getString("leader"),
-                     result.getDouble("balance")
+                    result.getInt("id"),
+                    result.getString("name"),
+                    result.getLong("create_date"),
+                    result.getString("leader"),
+                    result.getDouble("balance"),
+                    result.getBoolean("allow_friendly_fire")
                 );
             }
-
             stmt.close();
             conn.close();
 
@@ -244,7 +245,6 @@ public class SQLDatabase {
 
         return guild;
     }
-
 
 
     public Connection getConnection() throws SQLException {

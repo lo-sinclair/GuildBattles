@@ -9,8 +9,8 @@ public class EconomyManager {
     private static Economy eco;
 
     public static void init() {
-//        RegisteredServiceProvider<Economy>reg =  Bukkit.getServicesManager().getRegistration(Economy.class);
-//        if(reg != null) eco = reg.getProvider();
+        RegisteredServiceProvider<Economy>reg =  Bukkit.getServicesManager().getRegistration(Economy.class);
+        if(reg != null) eco = reg.getProvider();
     }
 
     public static boolean takeMoney(Player p, double amount) {

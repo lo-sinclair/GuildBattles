@@ -27,10 +27,9 @@ public class GuildManader {
         conv.begin();
     }
 
-
     private void createNewGuild(String guild_name, Player p) {
         long ts_naw = System.currentTimeMillis();
-        Guild guild = new Guild(0, guild_name, ts_naw, p.getName(), 0.0);
+        Guild guild = new Guild(0, guild_name, ts_naw, p.getName(), 0.0, false);
 
         int guild_id = pl.getDb().createGuild(guild);
 
