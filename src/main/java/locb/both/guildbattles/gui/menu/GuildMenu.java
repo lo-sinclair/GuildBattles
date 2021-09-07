@@ -96,7 +96,7 @@ public class GuildMenu extends Menu {
 
 
         // Кровать
-        ItemStack house = new ItemStack(Material.CHEST, 1);
+        ItemStack house = new ItemStack(Material.RED_BED, 1);
         meta = house.getItemMeta();
         meta.setDisplayName(Messages.getNotice("messages.menu.guild.house.title"));
         lore = new ArrayList<>();
@@ -113,14 +113,14 @@ public class GuildMenu extends Menu {
 
 
         // Деревянный топор
-        ItemStack privat = new ItemStack(Material.IRON_SWORD, 1);
+        ItemStack privat = new ItemStack(Material.WOODEN_AXE, 1);
         meta = privat.getItemMeta();
         meta.setDisplayName(Messages.getNotice("messages.menu.guild.private.title"));
-        battle.setItemMeta(meta);
+        privat.setItemMeta(meta);
 
 
         // Золотой слиток
-        ItemStack treasury = new ItemStack(Material.CHEST, 1);
+        ItemStack treasury = new ItemStack(Material.GOLD_INGOT, 1);
         meta = treasury.getItemMeta();
         meta.setDisplayName(Messages.getNotice("messages.menu.guild.treasury.title"));
         lore = new ArrayList<>();
@@ -156,7 +156,7 @@ public class GuildMenu extends Menu {
         //Стрела силы
         ItemStack friendlyFire = new ItemStack(Material.TIPPED_ARROW, 1);
         PotionMeta potionMeta = (PotionMeta) friendlyFire.getItemMeta();
-        potionMeta.setDisplayName(Messages.getNotice("messages.menu.friendlyFire.store.title"));
+        potionMeta.setDisplayName(Messages.getNotice("messages.menu.guild.friendlyFire.title"));
         potionMeta.setBasePotionData(new PotionData(PotionType.STRENGTH));
         friendlyFire.setItemMeta(potionMeta);
 
@@ -168,15 +168,25 @@ public class GuildMenu extends Menu {
         leave.setItemMeta(meta);
 
 
-
         inventory.setItem(1, guild);
         inventory.setItem(3, members_list);
         inventory.setItem(5, call);
-        
         inventory.setItem(7, storage);
-        inventory.setItem(19, house);
 
-        FILLER_GLASS = FILLER_GLASS = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
-        drawMenuFrame(false);
+        inventory.setItem(19, house);
+        inventory.setItem(21, battle);
+        inventory.setItem(23, privat);
+        inventory.setItem(25, treasury);
+
+        inventory.setItem(37, invite);
+        inventory.setItem(39, store);
+        inventory.setItem(41, alliances);
+        inventory.setItem(43, friendlyFire);
+
+        inventory.setItem(49, leave);
+
+
+        FILLER_GLASS = FILLER_GLASS = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE);
+        drawMenuFrame();
     }
 }
