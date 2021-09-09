@@ -55,9 +55,8 @@ public class SQLDatabase {
                 + "`name` VARCHAR(30) NOT NULL,"
                 + "`create_date` TIMESTAMP NOT NULL,"
                 + "`leader` VARCHAR(30) NOT NULL,"
-                + "`allow_friendly_fire TINYINT(1) DEFAULT 0`"
-                + "`balance` DOUBLE(64, 2) DEFAULT 0.0);"
-        ;
+                + "`balance` DOUBLE(64, 2) DEFAULT 0.0,"
+                + "`allow_friendly_fire` TINYINT(1) DEFAULT 0);";
 
         s.executeUpdate(q);
 
@@ -87,14 +86,14 @@ public class SQLDatabase {
 
 
             String q = "INSERT INTO gb_guilds (`name`, `create_date`, `leader`, `balance`, `allow_friendly_fire`) "
-                    + "VALUES ('%s', %d, '%s', %.2f);";
+                    + "VALUES ('%s', %d, '%s', %.2f, %d);";
 
             count = stmt.executeUpdate(String.format(Locale.ROOT, q,
                     guild.getName(),
                     guild.getCreateDate(),
                     guild.getLeader(),
                     guild.getBalance(),
-                    guild.isAllowFriendlyFire()
+                    (guild.isAllowFriendlyFire() ? 1 : 0)
             ));
 
             ResultSet keys = stmt.getGeneratedKeys();
