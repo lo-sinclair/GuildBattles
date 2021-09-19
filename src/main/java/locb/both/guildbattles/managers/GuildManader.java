@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nullable;
 
@@ -30,7 +31,22 @@ public class GuildManader {
         ConversationFactory cf = new ConversationFactory(pl);
         Conversation conv = cf.withFirstPrompt(new GuildNamePrompt())
                 .withLocalEcho(false)
-                .withTimeout(60)
+                .withTimeout(30)
+                .withPrefix(new ConvPrefix())
+                .buildConversation(p);
+        conv.begin();
+    }
+
+
+    public void inviteToGuildAction(Player p) {
+
+
+        pl.getCoollDownManager().getInviteCooldown().addPlayerToCoolDown(p);
+
+        ConversationFactory cf = new ConversationFactory(pl);
+        Conversation conv = cf.withFirstPrompt(new PlayerInvitePrompt(pl))
+                .withLocalEcho(false)
+                .withTimeout(30)
                 .withPrefix(new ConvPrefix())
                 .buildConversation(p);
         conv.begin();
@@ -66,7 +82,34 @@ public class GuildManader {
             //context.setSessionData("guildName", guild_name);
             return END_OF_CONVERSATION;
         }
-
     }
+
+    private class PlayerInvitePrompt extends PlayerNamePrompt {
+
+        public PlayerInvitePrompt(Plugin plugin) {
+            super(plugin);
+        }
+
+        @Override
+        protected Prompt acceptValidatedInput(ConversationContext context, Player p) {
+
+            p.sendMessage("Приглашение отправлено");
+
+            return END_OF_CONVERSATION;
+        }
+
+        @Override
+        public String getPromptText(ConversationContext conversationContext) {
+            return "Введите имя игрока, которого вы хотите пригласить в гильдию";
+        }
+
+        @Override
+        protected String getFailedValidationText(ConversationContext context,
+                                                 String invalidInput) {
+            return ChatColor.RED + "Вы ошиблись, попробуйте снова";
+        }
+    }
+
+
 
 }

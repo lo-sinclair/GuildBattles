@@ -3,6 +3,7 @@ package locb.both.guildbattles;
 import locb.both.guildbattles.cmd.GuildCommand;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
 import locb.both.guildbattles.listeners.MenuListener;
+import locb.both.guildbattles.managers.CoolDownManager;
 import locb.both.guildbattles.managers.EconomyManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,6 +22,7 @@ public final class GuildBattles extends JavaPlugin implements Listener {
     private SQLDatabase db;
 
     private static final HashMap<Player, PlayerMenuUsage> playerMenuUsageMap = new HashMap<>();
+    private CoolDownManager coollDownManager;
 
     @Override
     public void onEnable() {
@@ -41,6 +43,9 @@ public final class GuildBattles extends JavaPlugin implements Listener {
             e.printStackTrace();
             Bukkit.getPluginManager().disablePlugin(this);
         }
+
+        coollDownManager = new CoolDownManager(this);
+
         EconomyManager.init();
 
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
@@ -65,6 +70,10 @@ public final class GuildBattles extends JavaPlugin implements Listener {
             playerMenuUsageMap.put(p, playerMenuUsage);
             return playerMenuUsage;
         }
+    }
+
+    public CoolDownManager getCoollDownManager(){
+        return coollDownManager;
     }
 
     public void updatePlayerMenuUsage(Player p) {

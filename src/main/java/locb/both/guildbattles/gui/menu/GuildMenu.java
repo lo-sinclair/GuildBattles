@@ -6,8 +6,11 @@ import locb.both.guildbattles.gui.PlayerMenuUsage;
 import locb.both.guildbattles.managers.GuildManader;
 import locb.both.guildbattles.model.Guild;
 import locb.both.guildbattles.model.Member;
+import net.minecraft.network.protocol.game.PacketPlayOutOpenBook;
+import net.minecraft.world.EnumHand;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -39,7 +42,12 @@ public class GuildMenu extends Menu {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
-
+        switch (e.getCurrentItem().getType()) {
+            case LIME_DYE:
+                e.getWhoClicked().closeInventory();
+                manader.inviteToGuildAction(playerMenuUsage.getOwner());
+                break;
+        }
     }
 
     @Override

@@ -42,9 +42,8 @@ public class NoGuildMenu extends Menu {
                 e.getWhoClicked().closeInventory();
                 e.getWhoClicked().sendMessage("Создается гильдия");
                 manader.createGuildAction(playerMenuUsage.getOwner());
-
-
                 break;
+
             case WRITTEN_BOOK:
                 ItemStack item = e.getCurrentItem();
 
