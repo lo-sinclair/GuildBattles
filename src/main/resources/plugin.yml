@@ -7,3 +7,5 @@ commands:
     description: Main guilds command
     aliases: [g, guild]
     ussage: /guild <args>
+  guildInvite:
+    description: guild Invite command

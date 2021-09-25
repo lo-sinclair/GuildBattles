@@ -49,8 +49,9 @@ public class SQLDatabase {
 
         Statement s = (Statement) conn.createStatement();
 
-        String q;
-        q = "CREATE TABLE IF NOT EXISTS gb_guilds ("
+        String q = "";
+        q += "PRAGMA foreign_keys=on;";
+        q += "CREATE TABLE IF NOT EXISTS gb_guilds ("
                 + "`id` INTEGER PRIMARY KEY,"
                 + "`name` VARCHAR(30) NOT NULL,"
                 + "`create_date` TIMESTAMP NOT NULL,"
@@ -70,7 +71,7 @@ public class SQLDatabase {
                 + "`friendly_fire` INTEGER(11) DEFAULT 0,"
                 + "`deaths` INTEGER(11) DEFAULT 0,"
                 + "`deposit` DOUBLE(64,2) DEFAULT 0.0, "
-                + "FOREIGN KEY (guild_id) REFERENCES gb_guilds(id));";
+                + "FOREIGN KEY (guild_id) REFERENCES gb_guilds(id) ON DELETE CASCADE);";
         s.executeUpdate(q);
 
         s.close();
@@ -111,6 +112,27 @@ public class SQLDatabase {
         return id;
     }
 
+    public int removeGuild(int id) {
+        int count = 0;
+        try {
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+
+            String q = "DELETE FROM gb_guilds WHERE `id` = '%d'";
+            count = stmt.executeUpdate(String.format(q, id));
+
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return count;
+
+    }
+
+
     public int createMember(Member member) {
         int count = 0;
         int id = 0;
@@ -142,6 +164,45 @@ public class SQLDatabase {
         }
         return id;
     }
+
+
+    public int removeMember(int id) {
+        int count = 0;
+        try {
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+
+            String q = "DELETE FROM gb_members WHERE `id` = '%d'";
+            count = stmt.executeUpdate(String.format(q, id));
+
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    public int removeMember(String name) {
+        int count = 0;
+        try {
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+
+            String q = "DELETE FROM gb_members WHERE `name` = '%s'";
+            count = stmt.executeUpdate(String.format(q, name));
+
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+
 
 
     public Member findMemberByName(String name) {

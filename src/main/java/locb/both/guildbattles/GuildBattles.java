@@ -1,10 +1,13 @@
 package locb.both.guildbattles;
 
 import locb.both.guildbattles.cmd.GuildCommand;
+import locb.both.guildbattles.cmd.InviteCommand;
+import locb.both.guildbattles.cooldowns.TimeCooldown;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
 import locb.both.guildbattles.listeners.MenuListener;
-import locb.both.guildbattles.managers.CoolDownManager;
 import locb.both.guildbattles.managers.EconomyManager;
+import locb.both.guildbattles.managers.GuildManader;
+import locb.both.guildbattles.managers.RankManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -14,15 +17,26 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
-public final class GuildBattles extends JavaPlugin implements Listener {
+public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Listener {
     private static GuildBattles instance;
     Logger log = Logger.getLogger("Minecraft");
     private SQLDatabase db;
 
+    //managers
+    private RankManager rankManager;
+    private GuildManader guildManager;
+
     private static final HashMap<Player, PlayerMenuUsage> playerMenuUsageMap = new HashMap<>();
-    private CoolDownManager coollDownManager;
+
+    //CoolDowns
+    private static TimeCooldown inviteCoolDown = new TimeCooldown();
+
+    public static TimeCooldown getInviteCoolDown() {
+        return inviteCoolDown;
+    }
 
     @Override
     public void onEnable() {
@@ -44,13 +58,14 @@ public final class GuildBattles extends JavaPlugin implements Listener {
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
-        coollDownManager = new CoolDownManager(this);
-
         EconomyManager.init();
+        this.guildManager = new GuildManader();
+        this.rankManager = new RankManager();
 
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 
         getCommand("guild").setExecutor(new GuildCommand(this));
+        getCommand("guildInvite").setExecutor(new InviteCommand(this));
 
     }
 
@@ -59,6 +74,8 @@ public final class GuildBattles extends JavaPlugin implements Listener {
         // Plugin shutdown logic
     }
 
+
+    // playerMenuUsage
     public static PlayerMenuUsage getPlayerMenuUsage(Player p) {
         PlayerMenuUsage playerMenuUsage;
 
@@ -72,19 +89,36 @@ public final class GuildBattles extends JavaPlugin implements Listener {
         }
     }
 
-    public CoolDownManager getCoollDownManager(){
-        return coollDownManager;
-    }
-
     public void updatePlayerMenuUsage(Player p) {
         playerMenuUsageMap.get(p).setMember();
+        playerMenuUsageMap.get(p).setGuild();
     }
+
+    public void resetPlayerMenuUsage(Player p) {
+        PlayerMenuUsage playerMenuUsage = new PlayerMenuUsage((p));
+        playerMenuUsageMap.put(p, playerMenuUsage);
+    }
+
+    public void updateAllPlayerMenuUsage(){
+        for(Map.Entry<Player, PlayerMenuUsage> entry : playerMenuUsageMap.entrySet()) {
+            updatePlayerMenuUsage(entry.getKey());
+        }
+    }
+
 
     public SQLDatabase getDb() {
         return db;
     }
 
+    public GuildManader getGuildManager() {
+        return guildManager;
+    }
+    public RankManager getRankManager() {
+        return rankManager;
+    }
+
     public static GuildBattles getInstance() {
         return instance;
     }
+
 }

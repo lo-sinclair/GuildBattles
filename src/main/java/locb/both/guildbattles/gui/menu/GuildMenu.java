@@ -1,9 +1,11 @@
 package locb.both.guildbattles.gui.menu;
 
+import locb.both.guildbattles.GuildBattles;
 import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.gui.Menu;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
 import locb.both.guildbattles.managers.GuildManader;
+import locb.both.guildbattles.managers.RankManager;
 import locb.both.guildbattles.model.Guild;
 import locb.both.guildbattles.model.Member;
 import net.minecraft.network.protocol.game.PacketPlayOutOpenBook;
@@ -28,6 +30,7 @@ public class GuildMenu extends Menu {
     public GuildMenu(PlayerMenuUsage playerMenuUsage) {
         super(playerMenuUsage);
         manader = new GuildManader();
+
     }
 
     @Override
@@ -195,6 +198,6 @@ public class GuildMenu extends Menu {
 
 
         FILLER_GLASS = FILLER_GLASS = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE);
-        drawMenuFrame();
+        drawMenuFrame(false);
     }
 }

@@ -14,7 +14,7 @@ public abstract class Colldown {
 
     public abstract  void addPlayerToCoolDown(Player p);
 
-    public abstract  void removePlayerToCoolDown(Player p);
+    public abstract  void removePlayerInCoolDown(Player p);
 
     public abstract  boolean isPlayerInCoolDown(Player p);
 

@@ -7,6 +7,7 @@ mySQL:
   password: password
 
 messages:
+  plugin_prefix: "&b[GuildBattles]"
   menu:
     noGuild:
       create_guild:

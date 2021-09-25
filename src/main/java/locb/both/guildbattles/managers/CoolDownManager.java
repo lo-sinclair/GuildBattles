@@ -1,9 +1,8 @@
 package locb.both.guildbattles.managers;
 
 import locb.both.guildbattles.GuildBattles;
-import locb.both.guildbattles.cooldowns.InviteCooldown;
+import locb.both.guildbattles.cooldowns.TimeCooldown;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,12 +12,12 @@ public class CoolDownManager {
 
     private Map<UUID, Integer> playerCoolDownMap = new HashMap<>();
 
-    private InviteCooldown inviteCooldown;
+    private TimeCooldown inviteCooldown;
 
 
 
     public CoolDownManager(GuildBattles pl) {
-        inviteCooldown = new InviteCooldown();
+        inviteCooldown = new TimeCooldown();
         /*new BukkitRunnable() {
 
             @Override
@@ -34,7 +33,7 @@ public class CoolDownManager {
             }
         }.runTaskTimer(pl, 0, 20);*/
     }
-    public InviteCooldown getInviteCooldown() {
+    public TimeCooldown getInviteCooldown() {
         return inviteCooldown;
     }
 

@@ -60,13 +60,13 @@ public abstract class Menu implements InventoryHolder {
         }
 
 
-        for(int i = cols; i < cols * (rows-1); i+=cols) {
+        for(int i = 0; i <= cols * (rows-1); i+=cols) {
             if(inventory.getItem(i) == null) {
                 inventory.setItem(i, FILLER_GLASS);
             }
         }
 
-        for(int i = cols*2-1; i < cols * (rows-1)+cols; i+=cols) {
+        for(int i = cols-1; i <= cols * (rows-1)+cols; i+=cols) {
             if(inventory.getItem(i) == null) {
                 inventory.setItem(i, FILLER_GLASS);
             }

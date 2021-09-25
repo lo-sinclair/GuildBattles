@@ -25,9 +25,7 @@ public class MenuListener implements Listener {
 
             Menu menu = (Menu) holder;
             menu.handleMenu(e);
-
         }
-
     }
 
 }

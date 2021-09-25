@@ -58,7 +58,6 @@ public class NoGuildMenu extends Menu {
                 p.getInventory().setItem(slot, old);
 
                 break;
-
         }
     }
 

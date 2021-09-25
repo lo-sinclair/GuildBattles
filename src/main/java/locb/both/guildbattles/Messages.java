@@ -17,4 +17,15 @@ public class Messages {
         msg = msg.replaceAll("%sender", sender.getName());
         return ChatColor.translateAlternateColorCodes('&', msg);
     }
+
+    public static String getErrorMessage(String path) {
+        //String msg = pl.getConfig().getString(path); //временно без конфига
+        String msg = path;
+        return ChatColor.RED + msg;
+    }
+
+    public static String getPrefix(){
+        String msg = pl.getConfig().getString("messages.plugin_prefix") + " ";
+        return ChatColor.translateAlternateColorCodes('&', msg) + ChatColor.RESET;
+    }
 }
