@@ -29,6 +29,18 @@ public class RankManager {
         return false;
     }
 
-
+    public Rank playerRank(Player p){
+        Member member = pl.getDb().findMemberByName(p.getName());
+        if(member!=null) {
+            if (member.getRole() == "leader") {
+                return Rank.LEADER;
+            }
+            if (member.getRole() == "trusted") {
+                return Rank.TRUSTED;
+            }
+            return Rank.MEMBER;
+        }
+        return Rank.OTHERS;
+    }
 
 }

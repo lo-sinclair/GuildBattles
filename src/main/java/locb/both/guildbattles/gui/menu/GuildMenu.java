@@ -2,6 +2,7 @@ package locb.both.guildbattles.gui.menu;
 
 import locb.both.guildbattles.GuildBattles;
 import locb.both.guildbattles.Messages;
+import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.gui.Menu;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
 import locb.both.guildbattles.managers.GuildManader;
@@ -23,13 +24,35 @@ import org.bukkit.potion.PotionType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GuildMenu extends Menu {
-    private GuildManader manader;
+    private GuildManader manager;
+    private boolean isLeader;
+    Rank rank;
+
+    private Map<Material, Rank> itemPermitions = new HashMap<>();
 
     public GuildMenu(PlayerMenuUsage playerMenuUsage) {
         super(playerMenuUsage);
-        manader = new GuildManader();
+        manager = new GuildManader();
+        rank = GuildBattles.getInstance().getRankManager().playerRank(playerMenuUsage.getOwner());
+
+        //временное решение для хранения прав
+        itemPermitions.put(Material.CYAN_BANNER, Rank.MEMBER);
+        itemPermitions.put(Material.BOOK, Rank.MEMBER);
+        itemPermitions.put(Material.BEACON, Rank.MEMBER);
+        itemPermitions.put(Material.CHEST, Rank.MEMBER);
+        itemPermitions.put(Material.RED_BED, Rank.MEMBER);
+        itemPermitions.put(Material.IRON_SWORD, Rank.MEMBER);
+        itemPermitions.put(Material.WOODEN_AXE, Rank.MEMBER);
+        itemPermitions.put(Material.GOLD_INGOT, Rank.MEMBER);
+        itemPermitions.put(Material.LIME_DYE, Rank.LEADER);
+        itemPermitions.put(Material.NETHER_STAR, Rank.MEMBER);
+        itemPermitions.put(Material.DIAMOND, Rank.MEMBER);
+        itemPermitions.put(Material.TIPPED_ARROW, Rank.MEMBER);
+        itemPermitions.put(Material.BARRIER, Rank.MEMBER);
 
     }
 
@@ -45,11 +68,15 @@ public class GuildMenu extends Menu {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
-        switch (e.getCurrentItem().getType()) {
-            case LIME_DYE:
-                e.getWhoClicked().closeInventory();
-                manader.inviteToGuildAction(playerMenuUsage.getOwner());
-                break;
+        if( rank.getLevel() <= itemPermitions.get(e.getCurrentItem()).getLevel() ) {
+            switch (e.getCurrentItem().getType()) {
+                case LIME_DYE:
+                    if (isLeader) {
+                        e.getWhoClicked().closeInventory();
+                        manager.inviteToGuildAction(playerMenuUsage.getOwner());
+                    }
+                    break;
+            }
         }
     }
 
@@ -144,6 +171,11 @@ public class GuildMenu extends Menu {
         ItemStack invite = new ItemStack(Material.LIME_DYE, 1);
         meta = invite.getItemMeta();
         meta.setDisplayName(Messages.getNotice("messages.menu.guild.invite.title"));
+        if( rank.getLevel() > itemPermitions.get(Material.LIME_DYE).getLevel()) {
+            lore = new ArrayList<>();
+            lore.add(ChatColor.RED + "Недостаточно прав для использования");
+            meta.setLore(lore);
+        }
         invite.setItemMeta(meta);
 
 
@@ -200,4 +232,6 @@ public class GuildMenu extends Menu {
         FILLER_GLASS = FILLER_GLASS = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE);
         drawMenuFrame(false);
     }
+
+
 }

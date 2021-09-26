@@ -2,6 +2,7 @@ package locb.both.guildbattles.cmd;
 
 import locb.both.guildbattles.GuildBattles;
 import locb.both.guildbattles.Messages;
+import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.cooldowns.TimeCooldown;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,6 +27,11 @@ public class InviteCommand implements CommandExecutor {
 
         Player inviteSender = Bukkit.getPlayer(args[1]);
         Player inviteTarget = Bukkit.getPlayer(args[2]);
+
+        if( ! pl.getRankManager().playerHasRank(inviteTarget, Rank.OTHERS)  ) {
+            commandSender.sendMessage(ChatColor.RED + "Вы не можете использовать эту команду.");
+            return false;
+        }
 
         if (args.length < 3) {
             commandSender.sendMessage(ChatColor.RED + "Не хватает аргументов!");
