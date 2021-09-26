@@ -52,6 +52,10 @@ public class GuildManader {
         conv.begin();
     }
 
+    public void leaveGuildAction(Player p) {
+        // в будущем возможен диалог
+        leaveGuild(p);
+    }
 
 
     public void sendInviteToGuild(Player sender, Player target) {
@@ -84,7 +88,6 @@ public class GuildManader {
             pl.updateAllPlayerMenuUsage();
             coolDown.removePlayerInCoolDown(target);
         }
-
     }
 
 
@@ -98,6 +101,20 @@ public class GuildManader {
 
         pl.getDb().createMember(member);
         pl.updatePlayerMenuUsage(p);
+    }
+
+
+    public void leaveGuild(Player p) {
+        if(pl.getRankManager().playerHasRank(p, Rank.MEMBER)) {
+            pl.getDb().removeMember(p.getName());
+            p.sendMessage(Messages.getPrefix() + "Вы покинули гильдию!");
+        }
+        if(pl.getRankManager().playerHasRank(p, Rank.LEADER)) {
+            Member member = pl.getDb().findMemberByName(p.getName());
+            pl.getDb().removeGuild(member.getGuildId());
+            p.sendMessage(Messages.getPrefix() + "Ваша гильдия прекратила существование :(");
+        }
+        pl.updateAllPlayerMenuUsage();
     }
 
 
@@ -118,6 +135,7 @@ public class GuildManader {
             return END_OF_CONVERSATION;
         }
     }
+
 
     private class PlayerInvitePrompt extends PlayerNamePrompt {
 

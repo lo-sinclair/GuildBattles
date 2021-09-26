@@ -25,10 +25,8 @@ public class InviteCommand implements CommandExecutor {
             return true;
         }
 
-        Player inviteSender = Bukkit.getPlayer(args[1]);
-        Player inviteTarget = Bukkit.getPlayer(args[2]);
-
-        if( ! pl.getRankManager().playerHasRank(inviteTarget, Rank.OTHERS)  ) {
+        // Права на команду
+        if( ! pl.getRankManager().playerHasRank((Player)commandSender, Rank.OTHERS)  ) {
             commandSender.sendMessage(ChatColor.RED + "Вы не можете использовать эту команду.");
             return false;
         }
@@ -37,6 +35,9 @@ public class InviteCommand implements CommandExecutor {
             commandSender.sendMessage(ChatColor.RED + "Не хватает аргументов!");
             return true;
         }
+
+        Player inviteSender = Bukkit.getPlayer(args[1]);
+        Player inviteTarget = Bukkit.getPlayer(args[2]);
 
         if (args[0].equals("accept")) {
             if(inviteSender != null ) {

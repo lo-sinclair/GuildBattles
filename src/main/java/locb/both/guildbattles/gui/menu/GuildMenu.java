@@ -68,14 +68,18 @@ public class GuildMenu extends Menu {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
-        if( rank.getLevel() <= itemPermitions.get(e.getCurrentItem()).getLevel() ) {
+        if( rank.getLevel() <= itemPermitions.get( e.getCurrentItem().getType() ).getLevel() ) {
             switch (e.getCurrentItem().getType()) {
                 case LIME_DYE:
-                    if (isLeader) {
-                        e.getWhoClicked().closeInventory();
-                        manager.inviteToGuildAction(playerMenuUsage.getOwner());
-                    }
+                    e.getWhoClicked().closeInventory();
+                    manager.inviteToGuildAction(playerMenuUsage.getOwner());
                     break;
+
+                case BARRIER:
+                    e.getWhoClicked().closeInventory();
+                    manager.leaveGuildAction(playerMenuUsage.getOwner());
+                    break;
+
             }
         }
     }
