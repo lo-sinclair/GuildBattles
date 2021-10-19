@@ -1,11 +1,16 @@
 package locb.both.guildbattles.gui;
 
+import locb.both.guildbattles.GuildBattles;
+import locb.both.guildbattles.Rank;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class Menu implements InventoryHolder {
 
@@ -17,9 +22,24 @@ public abstract class Menu implements InventoryHolder {
 
     public GuiToolKit guiToolKit = new GuiToolKit();
 
+
+    protected Map<Material, Rank> itemPermitions = new HashMap<>();
+
     public Menu(PlayerMenuUsage playerMenuUsage) {
         this.playerMenuUsage = playerMenuUsage;
     }
+
+    public Rank getOwnerRank(){
+        return GuildBattles.getInstance().getRankManager().playerRank(playerMenuUsage.getOwner());
+    }
+
+    public Rank getTargetRank(){
+        if (playerMenuUsage.getTarget() == null) {
+            return null;
+        }
+        return GuildBattles.getInstance().getRankManager().playerRank(playerMenuUsage.getTarget());
+    }
+
 
     public abstract String getMenuName();
 
@@ -84,6 +104,40 @@ public abstract class Menu implements InventoryHolder {
 
     public void setFillerGlass(Material type) {
         this.FILLER_GLASS = new ItemStack(type, 1);
+    }
+
+
+    protected class menuItem {
+
+        private String name;
+        private ItemStack item;
+        private int slot;
+        private Rank permission;
+
+
+        public menuItem(String name, ItemStack item, int slot, Rank permission) {
+            this.name = name;
+            this.item = item;
+            this.slot = slot;
+            this.permission = permission;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public ItemStack getItem() {
+            return item;
+        }
+
+        public int getSlot(){
+            return slot;
+        }
+
+        public Rank getPermission() {
+            return permission;
+        }
+
     }
 
 }

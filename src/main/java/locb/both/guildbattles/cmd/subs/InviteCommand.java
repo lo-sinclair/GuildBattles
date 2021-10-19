@@ -1,32 +1,36 @@
-package locb.both.guildbattles.cmd;
+package locb.both.guildbattles.cmd.subs;
 
 import locb.both.guildbattles.GuildBattles;
 import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.Rank;
+import locb.both.guildbattles.cmd.ISubCommand;
 import locb.both.guildbattles.cooldowns.TimeCooldown;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class InviteCommand implements CommandExecutor {
-    GuildBattles pl;
-
-    public InviteCommand(GuildBattles pl) {
-        this.pl = pl;
+public class InviteCommand implements ISubCommand {
+    @Override
+    public String getName() {
+        return null;
     }
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
-        if(!(commandSender instanceof Player)) {
-            commandSender.sendMessage(ChatColor.RED + "Only for players!");
-            return true;
-        }
+    public String getDescription() {
+        return null;
+    }
+
+    @Override
+    public String getSyntax() {
+        return null;
+    }
+
+    @Override
+    public boolean execute(CommandSender commandSender, String[] args) {
 
         // Права на команду
-        if( ! pl.getRankManager().playerHasRank((Player)commandSender, Rank.OTHERS)  ) {
+        if( pl.getRankManager().playerHasPerms((Player)commandSender, Rank.MEMBER)  ) {
             commandSender.sendMessage(ChatColor.RED + "Вы не можете использовать эту команду.");
             return false;
         }
@@ -63,6 +67,6 @@ public class InviteCommand implements CommandExecutor {
             return true;
         }
 
-        return true;
+        return false;
     }
 }

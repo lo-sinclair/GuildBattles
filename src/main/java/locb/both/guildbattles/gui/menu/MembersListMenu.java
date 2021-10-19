@@ -1,29 +1,48 @@
 package locb.both.guildbattles.gui.menu;
 
 import locb.both.guildbattles.GuildBattles;
+import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.gui.PeginateMenu;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import locb.both.guildbattles.managers.GuildManager;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class MembersListMenu extends PeginateMenu {
-    public MembersListMenu(PlayerMenuUsage playerMenuUsage) {
+
+    private GuildManager gManager;
+    Rank rank;
+    Rank role;
+
+    public MembersListMenu(PlayerMenuUsage playerMenuUsage, Rank role) {
         super(playerMenuUsage);
+        gManager = new GuildManager();
+        rank = GuildBattles.getInstance().getRankManager().playerRank(playerMenuUsage.getOwner());
+        this.role = role;
+
+        //временное решение для хранения прав
+        itemPermitions.put(Material.PLAYER_HEAD, Rank.TRUSTED);
+        itemPermitions.put(Material.WHITE_BANNER, Rank.MEMBER);
+        itemPermitions.put(Material.BARRIER, Rank.MEMBER);
     }
 
     @Override
     public String getMenuName() {
-        return "Список участников";
+        String name = "";
+        if(role.equals(Rank.TRUSTED))
+            name = "Список заместителей";
+        if(role.equals(Rank.MEMBER)) {
+            name = "Список рядовых";
+        }
+        return name;
     }
 
     @Override
@@ -33,18 +52,33 @@ public class MembersListMenu extends PeginateMenu {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
-        ArrayList<Player> players = new ArrayList<>(Bukkit.getServer().getOnlinePlayers());
+        List<OfflinePlayer> players = gManager.guildPlayers(playerMenuUsage.getGuild(), role);
+
+        if( rank.getLevel() > itemPermitions.get( e.getCurrentItem().getType() ).getLevel() ) {
+            return;
+        }
 
         if(e.getCurrentItem().getType().equals((Material.PLAYER_HEAD) )) {
+
             PlayerMenuUsage playerMenuUsage = GuildBattles.getPlayerMenuUsage((Player) e.getWhoClicked());
-            playerMenuUsage.setTarget(Bukkit.getPlayer(UUID.fromString(e.getCurrentItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(GuildBattles.getInstance(), "uuid"), PersistentDataType.STRING))));
-            new KickConfirmMenu(playerMenuUsage).open();
+
+
+
+            String uuid_str = e.getCurrentItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(GuildBattles.getInstance(), "uuid"), PersistentDataType.STRING);
+            OfflinePlayer target = Bukkit.getOfflinePlayer(UUID.fromString(uuid_str));
+            playerMenuUsage.setTarget(target);
+
+
+
+
+            new MemberEditMenu(playerMenuUsage, role).open();
+
         }
-        else if (e.getCurrentItem().getType().equals((CLOSE_BTN) )) {
-            e.getWhoClicked().closeInventory();
+        else if (e.getCurrentItem().getType().equals((Material.BARRIER) )) {
+            new MembersMenu(playerMenuUsage).open();
         }
-        else if (e.getCurrentItem().getType().equals((LEFT_BTN)) || e.getCurrentItem().getType().equals((RIGHT_BTN)) ) {
-            if(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("left")) {
+        else if (e.getCurrentItem().getType().equals((Material.WHITE_BANNER) ) || e.getCurrentItem().getType().equals((Material.WHITE_BANNER)) ) {
+            if(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Назад")) {
                 if (page == 0){
                     e.getWhoClicked().sendMessage(ChatColor.GRAY + "Вы уже на первой странице");
                 }
@@ -53,7 +87,7 @@ public class MembersListMenu extends PeginateMenu {
                     super.open();
                 }
             }
-            else if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("right")) {
+            else if (ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName()).equalsIgnoreCase("Вперед")) {
                 if(!((index + 1 ) >= players.size())) {
                     page = page + 1;
                     super.open();
@@ -70,7 +104,8 @@ public class MembersListMenu extends PeginateMenu {
 
         addMenuNavigation();
 
-        ArrayList<Player> players = new ArrayList<>(Bukkit.getServer().getOnlinePlayers());
+        List<OfflinePlayer> players = gManager.guildPlayers(playerMenuUsage.getGuild(), role);
+        ArrayList<String> lore;
 
         if(players != null && !players.isEmpty() ) {
             for(int i=0; i < maxItemPerPage; i++) {
@@ -79,17 +114,20 @@ public class MembersListMenu extends PeginateMenu {
                 if(players.get(index) != null) {
 
                     ItemStack playerItem = new ItemStack(Material.PLAYER_HEAD, 1);
-                    ItemMeta meta = playerItem.getItemMeta();
-                    meta.setDisplayName(ChatColor.GREEN + players.get(index).getDisplayName());
+
+                    SkullMeta meta = (SkullMeta) playerItem.getItemMeta();
+                    OfflinePlayer p = players.get(index);
+
+                    meta.setDisplayName(ChatColor.GREEN + p.getName());
 
                     meta.getPersistentDataContainer().set(new NamespacedKey(GuildBattles.getInstance(), "uuid"), PersistentDataType.STRING
                     , players.get(index).getUniqueId().toString());
 
+                    meta.setOwningPlayer(p);
+
                     playerItem.setItemMeta(meta);
 
                     inventory.addItem(playerItem);
-
-
 
                 }
             }

@@ -6,22 +6,28 @@ import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.conversation.ConvPrefix;
 //import locb.both.guildbattles.conversation.GuildNamePrompt;
 import locb.both.guildbattles.cooldowns.TimeCooldown;
+import locb.both.guildbattles.gui.GuiToolKit;
 import locb.both.guildbattles.model.Guild;
 import locb.both.guildbattles.model.Member;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-public class GuildManader {
+import java.util.ArrayList;
+import java.util.List;
+
+public class GuildManager {
 
     private final GuildBattles pl;
     private TimeCooldown coolDown = GuildBattles.getInviteCoolDown();
 
-    public GuildManader() {
+    public GuildManager() {
         pl = GuildBattles.getInstance();
     }
 
@@ -35,7 +41,7 @@ public class GuildManader {
         ConversationFactory cf = new ConversationFactory(pl);
         Conversation conv = cf.withFirstPrompt(new GuildNamePrompt())
                 .withLocalEcho(false)
-                .withTimeout(30)
+                .withTimeout(10)
                 .withPrefix(new ConvPrefix())
                 .buildConversation(p);
         conv.begin();
@@ -47,14 +53,41 @@ public class GuildManader {
         ConversationFactory cf = new ConversationFactory(pl);
         Conversation conv = cf.withFirstPrompt(new PlayerInvitePrompt(pl))
                 .withLocalEcho(false)
-                .withTimeout(10)
+                .withTimeout(30)
                 .buildConversation(p);
         conv.begin();
     }
 
     public void leaveGuildAction(Player p) {
-        // в будущем возможен диалог
-        leaveGuild(p);
+        TextComponent msg = GuiToolKit.confirmMessage(p, "Вы уверены, что хотите покинуть гильдию?",
+                "/guild leave accept", "/guild leave deny");
+        p.spigot().sendMessage(msg);
+    }
+
+    public void makeTrustedAction(Player sender, OfflinePlayer target) {
+        TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены?",
+                "/guild rank " + target.getName() + " trusted accept", "/guild rank \" + target.getName() + \" trusted deny");
+        sender.spigot().sendMessage(msg);
+    }
+
+    public void makeMemberAction(Player sender, OfflinePlayer target) {
+        TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены?",
+                "/guild rank " + target.getName() + " member accept", "/guild rank \" + target.getName() + \" member deny");
+        sender.spigot().sendMessage(msg);
+    }
+
+
+    public boolean makeRank(String name, Rank rank) {
+        Member member = pl.getDb().findMemberByName(name);
+        if(member != null) {
+            if( pl.getRankManager().playerRank(member) == rank) {
+                return false;
+            }
+            member.setRole(rank.getName());
+            pl.getDb().updateMember(member);
+            return true;
+        }
+        return false;
     }
 
 
@@ -65,12 +98,12 @@ public class GuildManader {
 
         // Сообщение для target
         TextComponent msg = new TextComponent(Messages.getPrefix() + ChatColor.BLUE + sender.getName() + ChatColor.RESET +
-                " приглашает вас вступить в гильдию  \"" + ChatColor.BLUE + guild.getName() + "\"" + ChatColor.RESET  + ". Хотите принять приглашение?\n");
+                " приглашает вас вступить в гильдию  " +  ChatColor.BLUE +"\""  + guild.getName() + "\"" + ChatColor.RESET  + ". Хотите принять приглашение?\n");
         TextComponent c1 = new TextComponent(ChatColor.BOLD + "" + ChatColor.GREEN + "[Принять] ");
-        c1.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/guildInvite accept " + sender.getName() + " " + target.getName()));
+        c1.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/guild invite accept " + sender.getName() + " " + target.getName()));
 
         TextComponent c2 = new TextComponent(ChatColor.BOLD + "" + ChatColor.RED + "[Отказаться] ");
-        c2.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/guildInvite deny " + sender.getName() + " " + target.getName()));
+        c2.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/guild invite deny " + sender.getName() + " " + target.getName()));
 
         msg.addExtra(c1);
         msg.addExtra(c2);
@@ -82,7 +115,7 @@ public class GuildManader {
 
         int guildId = pl.getDb().findMemberByName(sender.getName()).getGuildId();
         long ts_naw = System.currentTimeMillis();
-        Member member = new Member(0, target.getName(), guildId, ts_naw, "member", 0, 0, 0, 0.0);
+        Member member = new Member(0, target.getName(), target.getUniqueId(), guildId, ts_naw, "member", 0, 0, 0, 0.0, false);
 
         if (pl.getDb().createMember(member) != 0) {
             pl.updateAllPlayerMenuUsage();
@@ -93,11 +126,11 @@ public class GuildManader {
 
     private void createNewGuild(String guild_name, Player p) {
         long ts_naw = System.currentTimeMillis();
-        Guild guild = new Guild(0, guild_name, ts_naw, p.getName(), 0.0, false);
+        Guild guild = new Guild(0, guild_name, ts_naw, 0.0, false);
 
         int guild_id = pl.getDb().createGuild(guild);
 
-        Member member = new Member(0, p.getName(), guild_id, ts_naw,"leader",0, 0, 0, 0.0);
+        Member member = new Member(0, p.getName(), p.getUniqueId(), guild_id, ts_naw,"leader",0, 0, 0, 0.0, false);
 
         pl.getDb().createMember(member);
         pl.updatePlayerMenuUsage(p);
@@ -105,11 +138,11 @@ public class GuildManader {
 
 
     public void leaveGuild(Player p) {
-        if(pl.getRankManager().playerHasRank(p, Rank.MEMBER)) {
+        if(pl.getRankManager().playerRank(p).equals(Rank.MEMBER)) {
             pl.getDb().removeMember(p.getName());
             p.sendMessage(Messages.getPrefix() + "Вы покинули гильдию!");
         }
-        if(pl.getRankManager().playerHasRank(p, Rank.LEADER)) {
+        if(pl.getRankManager().playerRank(p).equals(Rank.LEADER)) {
             Member member = pl.getDb().findMemberByName(p.getName());
             pl.getDb().removeGuild(member.getGuildId());
             p.sendMessage(Messages.getPrefix() + "Ваша гильдия прекратила существование :(");
@@ -146,7 +179,7 @@ public class GuildManader {
         @Override
         protected Prompt acceptValidatedInput(ConversationContext context, Player target) {
             Player sender = (Player) context.getForWhom();
-            if( pl.getRankManager().playerHasRank(target, Rank.MEMBER ) ) {
+            if( pl.getRankManager().playerHasPerms(target, Rank.MEMBER ) ) {
                 context.getForWhom().sendRawMessage(Messages.getPrefix() +  ChatColor.RED + "Этот игрок уже состоит в гильдии!");
                 return END_OF_CONVERSATION;
             }
@@ -175,6 +208,20 @@ public class GuildManader {
         }
     }
 
-
+    public List<OfflinePlayer> guildPlayers(Guild g, Rank role) {
+        List<OfflinePlayer> players = new ArrayList<>();
+        List<Member> members = pl.getDb().findMembersByGuild(g.getId(), role.getName());
+        for(Member member : members) {
+            //Player gp = Bukkit.getPlayer(member.getUuid());
+            OfflinePlayer gp = Bukkit.getOfflinePlayer(member.getUuid());
+//            if( gp == null ) {
+//                 gp = (Player) Bukkit.getOfflinePlayer(member.getUuid());
+//            }
+            if(gp != null) {
+                players.add(gp);
+            }
+        }
+        return players;
+    }
 
 }

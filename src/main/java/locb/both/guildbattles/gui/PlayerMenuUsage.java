@@ -3,12 +3,13 @@ package locb.both.guildbattles.gui;
 import locb.both.guildbattles.GuildBattles;
 import locb.both.guildbattles.model.Guild;
 import locb.both.guildbattles.model.Member;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class PlayerMenuUsage {
 
     private Player owner;
-    private Player target;
+    private OfflinePlayer target;
     private Member member;
     private Guild guild;
 
@@ -26,11 +27,11 @@ public class PlayerMenuUsage {
         this.owner = owner;
     }
 
-    public Player getTarget() {
+    public OfflinePlayer getTarget() {
         return target;
     }
 
-    public void setTarget(Player target) {
+    public void setTarget(OfflinePlayer target) {
         this.target = target;
     }
 

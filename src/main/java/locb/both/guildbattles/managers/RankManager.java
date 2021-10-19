@@ -4,6 +4,7 @@ import com.sk89q.worldguard.bukkit.event.block.PlaceBlockEvent;
 import locb.both.guildbattles.GuildBattles;
 import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.model.Member;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class RankManager {
@@ -13,34 +14,40 @@ public class RankManager {
 
     }
 
-    public boolean playerHasRank(Player p, Rank rank){
+    public boolean playerHasPerms(Player p, Rank rank){
         Member member = pl.getDb().findMemberByName(p.getName());
-        switch (rank) {
-            case MEMBER:
-                if(member != null){ return true; }
-                break;
-            case LEADER:
-                if(member.getRole() == "leader") { return true; }
-                break;
-            case TRUSTED:
-                if(member.getRole() == "trusted") { return true; }
-                break;
+        if( member != null ) {
+            if(playerRank(p).getLevel() <= rank.getLevel()) {
+                return true;
+            }
         }
         return false;
     }
 
-    public Rank playerRank(Player p){
+    public Rank playerRank(OfflinePlayer p){
         Member member = pl.getDb().findMemberByName(p.getName());
         if(member!=null) {
-            if (member.getRole() == "leader") {
+            if (member.getRole().equals("leader")) {
                 return Rank.LEADER;
             }
-            if (member.getRole() == "trusted") {
+            if (member.getRole().equals("trusted")) {
                 return Rank.TRUSTED;
             }
             return Rank.MEMBER;
         }
-        return Rank.OTHERS;
+        return null;
     }
 
+    public Rank playerRank(Member member){
+        if(member!=null) {
+            if (member.getRole().equals("leader")) {
+                return Rank.LEADER;
+            }
+            if (member.getRole().equals("trusted")) {
+                return Rank.TRUSTED;
+            }
+            return Rank.MEMBER;
+        }
+        return null;
+    }
 }

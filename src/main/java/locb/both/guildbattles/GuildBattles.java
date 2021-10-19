@@ -1,12 +1,11 @@
 package locb.both.guildbattles;
 
 import locb.both.guildbattles.cmd.GuildCommand;
-import locb.both.guildbattles.cmd.InviteCommand;
 import locb.both.guildbattles.cooldowns.TimeCooldown;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
 import locb.both.guildbattles.listeners.MenuListener;
 import locb.both.guildbattles.managers.EconomyManager;
-import locb.both.guildbattles.managers.GuildManader;
+import locb.both.guildbattles.managers.GuildManager;
 import locb.both.guildbattles.managers.RankManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,7 +26,7 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
 
     //managers
     private RankManager rankManager;
-    private GuildManader guildManager;
+    private GuildManager guildManager;
 
     private static final HashMap<Player, PlayerMenuUsage> playerMenuUsageMap = new HashMap<>();
 
@@ -59,13 +58,12 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
         }
 
         EconomyManager.init();
-        this.guildManager = new GuildManader();
+        this.guildManager = new GuildManager();
         this.rankManager = new RankManager();
 
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 
         getCommand("guild").setExecutor(new GuildCommand(this));
-        getCommand("guildInvite").setExecutor(new InviteCommand(this));
 
     }
 
@@ -110,7 +108,7 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
         return db;
     }
 
-    public GuildManader getGuildManager() {
+    public GuildManager getGuildManager() {
         return guildManager;
     }
     public RankManager getRankManager() {

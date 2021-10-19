@@ -3,7 +3,7 @@ package locb.both.guildbattles.gui.menu;
 import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.gui.Menu;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
-import locb.both.guildbattles.managers.GuildManader;
+import locb.both.guildbattles.managers.GuildManager;
 import net.minecraft.network.protocol.game.PacketPlayOutOpenBook;
 import net.minecraft.world.EnumHand;
 import org.bukkit.ChatColor;
@@ -17,11 +17,11 @@ import java.util.ArrayList;
 
 public class NoGuildMenu extends Menu {
 
-    private GuildManader manader;
+    private GuildManager manader;
 
     public NoGuildMenu(PlayerMenuUsage playerMenuUsage) {
         super(playerMenuUsage);
-        manader = new GuildManader();
+        manader = new GuildManager();
     }
 
     @Override

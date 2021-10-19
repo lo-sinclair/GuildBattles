@@ -20,9 +20,6 @@ public abstract class PeginateMenu extends Menu {
 
     protected int index = 0;
 
-    protected static Material LEFT_BTN = Material.POPPY;
-    protected static Material RIGHT_BTN = Material.ARROW;
-    protected static Material CLOSE_BTN = Material.BARRIER;
 
     public PeginateMenu(PlayerMenuUsage playerMenuUsage) {
         super(playerMenuUsage);
@@ -39,25 +36,25 @@ public abstract class PeginateMenu extends Menu {
         patterns = new ArrayList<>();
         patterns.add(new Pattern(DyeColor.BLACK, PatternType.BASE));
         patterns.add(new Pattern(DyeColor.WHITE, PatternType.RHOMBUS_MIDDLE));
-        patterns.add(new Pattern(DyeColor.BLACK, PatternType.HALF_VERTICAL));
+        patterns.add(new Pattern(DyeColor.BLACK, PatternType.HALF_VERTICAL_MIRROR));
         patterns.add(new Pattern(DyeColor.GRAY, PatternType.BORDER));
         assert meta != null;
         ((BannerMeta) meta).setPatterns(patterns);
         left.setItemMeta(meta);
 
-        ItemStack right = new ItemStack(RIGHT_BTN, 1);
+        ItemStack right = new ItemStack(Material.WHITE_BANNER, 1);
         meta = (BannerMeta)right.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + "Вперед");
         patterns = new ArrayList<>();
         patterns.add(new Pattern(DyeColor.BLACK, PatternType.BASE));
         patterns.add(new Pattern(DyeColor.WHITE, PatternType.RHOMBUS_MIDDLE));
-        patterns.add(new Pattern(DyeColor.BLACK, PatternType.HALF_VERTICAL_MIRROR));
+        patterns.add(new Pattern(DyeColor.BLACK, PatternType.HALF_VERTICAL));
         patterns.add(new Pattern(DyeColor.GRAY, PatternType.BORDER));
         assert meta != null;
         ((BannerMeta) meta).setPatterns(patterns);
         right.setItemMeta(meta);
 
-        ItemStack close = new ItemStack(CLOSE_BTN, 1);
+        ItemStack close = new ItemStack(Material.BARRIER, 1);
         meta = close.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + "Закрыть");
         close.setItemMeta(meta);

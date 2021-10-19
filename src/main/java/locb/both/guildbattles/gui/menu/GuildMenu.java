@@ -1,19 +1,14 @@
 package locb.both.guildbattles.gui.menu;
 
-import locb.both.guildbattles.GuildBattles;
 import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.gui.Menu;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
-import locb.both.guildbattles.managers.GuildManader;
-import locb.both.guildbattles.managers.RankManager;
+import locb.both.guildbattles.managers.GuildManager;
 import locb.both.guildbattles.model.Guild;
 import locb.both.guildbattles.model.Member;
-import net.minecraft.network.protocol.game.PacketPlayOutOpenBook;
-import net.minecraft.world.EnumHand;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -24,20 +19,15 @@ import org.bukkit.potion.PotionType;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class GuildMenu extends Menu {
-    private GuildManader manager;
-    private boolean isLeader;
-    Rank rank;
-
-    private Map<Material, Rank> itemPermitions = new HashMap<>();
+    private GuildManager manager;
+    //Rank rank;
 
     public GuildMenu(PlayerMenuUsage playerMenuUsage) {
         super(playerMenuUsage);
-        manager = new GuildManader();
-        rank = GuildBattles.getInstance().getRankManager().playerRank(playerMenuUsage.getOwner());
+        manager = new GuildManager();
+        //rank = GuildBattles.getInstance().getRankManager().playerRank(playerMenuUsage.getOwner());
 
         //временное решение для хранения прав
         itemPermitions.put(Material.CYAN_BANNER, Rank.MEMBER);
@@ -48,12 +38,11 @@ public class GuildMenu extends Menu {
         itemPermitions.put(Material.IRON_SWORD, Rank.MEMBER);
         itemPermitions.put(Material.WOODEN_AXE, Rank.MEMBER);
         itemPermitions.put(Material.GOLD_INGOT, Rank.MEMBER);
-        itemPermitions.put(Material.LIME_DYE, Rank.LEADER);
+        itemPermitions.put(Material.LIME_DYE, Rank.TRUSTED);
         itemPermitions.put(Material.NETHER_STAR, Rank.MEMBER);
         itemPermitions.put(Material.DIAMOND, Rank.MEMBER);
         itemPermitions.put(Material.TIPPED_ARROW, Rank.MEMBER);
         itemPermitions.put(Material.BARRIER, Rank.MEMBER);
-
     }
 
     @Override
@@ -68,18 +57,21 @@ public class GuildMenu extends Menu {
 
     @Override
     public void handleMenu(InventoryClickEvent e) {
-        if( rank.getLevel() <= itemPermitions.get( e.getCurrentItem().getType() ).getLevel() ) {
+        if( getOwnerRank().getLevel() <= itemPermitions.get( e.getCurrentItem().getType() ).getLevel() ) {
             switch (e.getCurrentItem().getType()) {
                 case LIME_DYE:
-                    e.getWhoClicked().closeInventory();
                     manager.inviteToGuildAction(playerMenuUsage.getOwner());
+                    e.getWhoClicked().closeInventory();
+                    break;
+
+                case BOOK:
+                    new MembersMenu(playerMenuUsage).open();
                     break;
 
                 case BARRIER:
                     e.getWhoClicked().closeInventory();
                     manager.leaveGuildAction(playerMenuUsage.getOwner());
                     break;
-
             }
         }
     }
@@ -104,7 +96,7 @@ public class GuildMenu extends Menu {
         lore = new ArrayList<>();
         lore.add("Дата создания: " + dataStr);
         lore.add("Участников онлайн: " + g.onlineMembersCount() + "/" + g.membersCount());
-        lore.add("Глава: " + m.getName());
+        lore.add("Глава: " + g.getLeader().getName());
         lore.add("Статус битвы гильдий: не участвует");
 
         meta.setLore(lore);
@@ -175,7 +167,8 @@ public class GuildMenu extends Menu {
         ItemStack invite = new ItemStack(Material.LIME_DYE, 1);
         meta = invite.getItemMeta();
         meta.setDisplayName(Messages.getNotice("messages.menu.guild.invite.title"));
-        if( rank.getLevel() > itemPermitions.get(Material.LIME_DYE).getLevel()) {
+
+        if( getOwnerRank().getLevel() > itemPermitions.get(Material.LIME_DYE).getLevel()) {
             lore = new ArrayList<>();
             lore.add(ChatColor.RED + "Недостаточно прав для использования");
             meta.setLore(lore);

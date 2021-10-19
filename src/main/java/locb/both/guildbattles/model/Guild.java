@@ -10,17 +10,15 @@ public class Guild {
     private int id;
     private String name;
     private long createDate;
-    private String leader;
     private double balance;
     private boolean allowFriendlyFire;
 
     private List<Member> members;
 
-    public Guild(int id, String name, long createDate, String leader, double balance, boolean allowFriendlyFire) {
+    public Guild(int id, String name, long createDate, double balance, boolean allowFriendlyFire) {
         this.id = id;
         this.name = name;
         this.createDate = createDate;
-        this.leader = leader;
         this.balance = balance;
         this.allowFriendlyFire = allowFriendlyFire;
     }
@@ -45,14 +43,6 @@ public class Guild {
         return createDate;
     }
 
-    public String getLeader() {
-        return leader;
-    }
-
-    public void setLeader(String leader) {
-        this.leader = leader;
-    }
-
     public void setCreateDate(long createDate) {
         this.createDate = createDate;
     }
@@ -71,6 +61,13 @@ public class Guild {
 
     public void setAllowFriendlyFire(boolean allowFriendlyFire) {
         this.allowFriendlyFire = allowFriendlyFire;
+    }
+
+
+    public Member getLeader(){
+        List<Member> mamList = GuildBattles.getInstance().getDb().findMembersByGuild(id, "leader");
+        if (mamList != null) return mamList.get(0);
+        return null;
     }
 
     public void loadGuildMembers(){

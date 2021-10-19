@@ -1,8 +1,11 @@
 package locb.both.guildbattles.model;
 
+import java.util.UUID;
+
 public class Member {
     private int id;
     private String name;
+    private UUID uuid;
     private int guildId;
     private long joinDate;
     private String role;
@@ -10,10 +13,13 @@ public class Member {
     private int friendlyFire;
     private int deaths;
     private double deposit;
+    private boolean privat;
 
-    public Member(int id, String name, int guildId, long joinDate, String role, int rivalKills, int friendlyFire, int deaths, double deposit) {
+
+    public Member(int id, String name, UUID uuid, int guildId, long joinDate, String role, int rivalKills, int friendlyFire, int deaths, double deposit, boolean privat) {
         setId(id);
         setName(name);
+        setUuid(uuid);
         setGuild_id(guildId);
         setRole(role);
         setJoinDate(joinDate);
@@ -21,6 +27,7 @@ public class Member {
         setFriendlyFire(friendlyFire);
         setDeaths(deaths);
         setDeposit(deposit);
+        setPrivat(privat);
     }
 
     public int getId() {
@@ -83,6 +90,18 @@ public class Member {
         return guildId;
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
+    public void setGuildId(int guildId) {
+        this.guildId = guildId;
+    }
+
     public void setGuild_id(int guild_id) {
         this.guildId = guild_id;
     }
@@ -93,5 +112,13 @@ public class Member {
 
     public void setDeposit(double deposit) {
         this.deposit = deposit;
+    }
+
+    public boolean isPrivat() {
+        return privat;
+    }
+
+    public void setPrivat(boolean privat) {
+        this.privat = privat;
     }
 }
