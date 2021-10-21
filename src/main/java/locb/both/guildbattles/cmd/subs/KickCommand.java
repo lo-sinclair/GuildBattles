@@ -7,7 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class PrivatCommand implements ISubCommand {
+public class KickCommand implements ISubCommand {
     @Override
     public String getName() {
         return null;
@@ -25,13 +25,14 @@ public class PrivatCommand implements ISubCommand {
 
     @Override
     public boolean execute(CommandSender commandSender, String[] args) {
+
         // Права на команду
-        if( !pl.getRankManager().playerHasPerms((Player)commandSender, Rank.LEADER)  ) {
+        if( !pl.getRankManager().playerHasPerms((Player)commandSender, Rank.TRUSTED )  ) {
             commandSender.sendMessage(ChatColor.RED + "Вы не можете использовать эту команду.");
             return false;
         }
 
-        if (args.length < 3) {
+        if (args.length < 1) {
             commandSender.sendMessage(ChatColor.RED + "Не хватает аргументов!");
             return true;
         }
@@ -39,33 +40,24 @@ public class PrivatCommand implements ISubCommand {
         Player ps = (Player) commandSender;
         Player pt = Bukkit.getPlayer(args[0]);
 
-        if (args[2].equals("accept")) {
-            if (args[1].equals("true")) {
-                if (pl.getGuildManager().assignPrivate(args[0], true)) {
-                    ps.sendMessage(args[0] + " получает доступ к привату!");
-                }
-                else {
-                    ps.sendMessage(ChatColor.RED + "Вы ошиблись, проверьте параметры");
-                }
+        if (args[1].equals("accept")) {
+            if (pl.getGuildManager().kickMember(args[0])) {
+                ps.sendMessage(args[0] + " больше не состоит в вашей гильдии.");
             }
-            if (args[1].equals("false")) {
-                if(pl.getGuildManager().assignPrivate(args[0], false)){
-                    ps.sendMessage(args[0] + " больше не имеет доступа к привату.");
-                }
-                else {
-                    ps.sendMessage(ChatColor.RED + "Вы ошиблись, проверьте параметры");
-                }
+            else {
+                ps.sendMessage(ChatColor.RED + "Вы ошиблись, проверьте параметры");
             }
-
             return true;
         }
 
-        if (args[3].equals("deny")) {
+        if (args[1].equals("deny")) {
 
             return true;
         }
 
 
         return false;
+
+
     }
 }

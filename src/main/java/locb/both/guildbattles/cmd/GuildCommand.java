@@ -2,8 +2,7 @@ package locb.both.guildbattles.cmd;
 
 import locb.both.guildbattles.GuildBattles;
 import locb.both.guildbattles.Rank;
-import locb.both.guildbattles.cmd.subs.InviteCommand;
-import locb.both.guildbattles.cmd.subs.LeaveCommand;
+import locb.both.guildbattles.cmd.subs.*;
 import locb.both.guildbattles.gui.menu.GuildMenu;
 import locb.both.guildbattles.gui.menu.NoGuildMenu;
 import org.bukkit.ChatColor;
@@ -29,6 +28,9 @@ public class GuildCommand implements CommandExecutor {
         this.pl = pl;
         subCommands.put("invite", new InviteCommand());
         subCommands.put("leave", new LeaveCommand());
+        subCommands.put("rank", new RankCommand());
+        subCommands.put("privat", new PrivatCommand());
+        subCommands.put("kick", new KickCommand());
     }
 
     @Override

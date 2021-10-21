@@ -70,11 +70,18 @@ public class MemberEditMenu extends Menu {
                     break;
 
                 case GREEN_WOOL:
-
+                    gManager.assignPrivateAction(playerMenuUsage.getOwner(), playerMenuUsage.getTarget(), true);
+                    e.getWhoClicked().closeInventory();
                     break;
 
                 case RED_WOOL:
+                    gManager.assignPrivateAction(playerMenuUsage.getOwner(), playerMenuUsage.getTarget(), false);
+                    e.getWhoClicked().closeInventory();
+                    break;
 
+                case BARRIER:
+                    gManager.kickMemberAction(playerMenuUsage.getOwner(), playerMenuUsage.getTarget());
+                    e.getWhoClicked().closeInventory();
                     break;
 
                 case WHITE_BANNER:
@@ -93,7 +100,8 @@ public class MemberEditMenu extends Menu {
 
         ItemStack signRank = new ItemStack(Material.POPPY, 1);
         if(getTargetRank().equals(Rank.MEMBER)) {
-            signRank = new ItemStack(Material.IRON_HELMET, 1);
+            // Золотой шлем
+            signRank = new ItemStack(Material.GOLDEN_HELMET, 1);
             meta = signRank.getItemMeta();
             meta.setDisplayName("Сделать заместителем");
             lore = new ArrayList<>();
@@ -104,15 +112,15 @@ public class MemberEditMenu extends Menu {
             signRank.setItemMeta(meta);
         }
         if(getTargetRank().equals(Rank.TRUSTED)) {
-            // Золотой шлем
-            signRank = new ItemStack(Material.GOLDEN_HELMET, 1);
+            // Железный шлем
+            signRank = new ItemStack(Material.IRON_HELMET, 1);
             meta = signRank.getItemMeta();
-            meta.setDisplayName("Сделать заместителем");
+            meta.setDisplayName("Сделать рядовым");
             signRank.setItemMeta(meta);
         }
 
         ItemStack assignLeader = new ItemStack(Material.DIAMOND_HELMET, 1);
-        meta = signRank.getItemMeta();
+        meta = assignLeader.getItemMeta();
         meta.setDisplayName("Передать главу");
         assignLeader.setItemMeta(meta);
 

@@ -122,9 +122,9 @@ public class SQLDatabase {
             Statement stmt = conn.createStatement();
 
             String q = "UPDATE gb_guilds SET " +
-                    "`name` = '%s'" +
-                    "`create_date` = %d" +
-                    "`balance` = %.2f" +
+                    "`name` = '%s'," +
+                    "`create_date` = %d," +
+                    "`balance` = %.2f," +
                     "`allow_friendly_fire` = %d " +
                     "WHERE `id` = %d;";
 
@@ -214,15 +214,15 @@ public class SQLDatabase {
             Statement stmt = conn.createStatement();
 
             String q = "UPDATE gb_members SET " +
-                    "`name` = '%s'" +
-                    "`uuid` = '%s'" +
-                    "`guild_id` = %d" +
-                    "`join_date` = %d" +
-                    "`role` = '%s'" +
-                    "`rival_kills` = %d" +
-                    "`friendly_fire` = %d" +
-                    " `deaths` = %d" +
-                    "`deposit` = %.2f" +
+                    "`name` = '%s'," +
+                    "`uuid` = '%s'," +
+                    "`guild_id` = %d," +
+                    "`join_date` = %d," +
+                    "`role` = '%s'," +
+                    "`rival_kills` = %d," +
+                    "`friendly_fire` = %d," +
+                    " `deaths` = %d," +
+                    "`deposit` = %.2f," +
                     "privat = %d " +
                     "WHERE `id` = %d;";
 

@@ -66,29 +66,71 @@ public class GuildManager {
 
     public void makeTrustedAction(Player sender, OfflinePlayer target) {
         TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены?",
-                "/guild rank " + target.getName() + " trusted accept", "/guild rank \" + target.getName() + \" trusted deny");
+                "/guild rank " + target.getName() + " trusted accept", "/guild rank " + target.getName() + " trusted deny");
         sender.spigot().sendMessage(msg);
     }
 
     public void makeMemberAction(Player sender, OfflinePlayer target) {
         TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены?",
-                "/guild rank " + target.getName() + " member accept", "/guild rank \" + target.getName() + \" member deny");
+                "/guild rank " + target.getName() + " member accept", "/guild rank " + target.getName() + " member deny");
         sender.spigot().sendMessage(msg);
+    }
+
+    public void assignPrivateAction(Player sender, OfflinePlayer target, boolean allow) {
+        TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены?",
+                "/guild privat " + target.getName() + " " + (allow ? "true" : "false") + " accept", "/guild privat " + target.getName() + " " + (allow ? "true" : "false") + " deny");
+        sender.spigot().sendMessage(msg);
+    }
+
+    public void kickMemberAction(Player sender, OfflinePlayer target){
+        TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены, что хотите выгнать " + target.getName() + "из гильдии?",
+                "/guild kick " + target.getName() + " accept", "/guild kick " + target.getName() + " deny");
+        sender.spigot().sendMessage(msg);
+    }
+
+
+
+    public boolean kickMember(String name) {
+        Member member = pl.getDb().findMemberByName(name);
+        if(member != null) {
+            if(member.getRole() == "leader") {
+                return false;
+            }
+            pl.getDb().removeMember(name);
+            pl.updateAllPlayerMenuUsage();
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean assignPrivate(String name, boolean allow) {
+        Member member = pl.getDb().findMemberByName(name);
+        if(member != null) {
+            member.setPrivat(allow);
+            pl.getDb().updateMember(member);
+            pl.updateAllPlayerMenuUsage();
+            return true;
+        }
+        return false;
     }
 
 
     public boolean makeRank(String name, Rank rank) {
         Member member = pl.getDb().findMemberByName(name);
         if(member != null) {
+            System.out.println(pl.getRankManager().playerRank(member));
             if( pl.getRankManager().playerRank(member) == rank) {
                 return false;
             }
             member.setRole(rank.getName());
             pl.getDb().updateMember(member);
+            pl.updateAllPlayerMenuUsage();
             return true;
         }
         return false;
     }
+
 
 
     public void sendInviteToGuild(Player sender, Player target) {

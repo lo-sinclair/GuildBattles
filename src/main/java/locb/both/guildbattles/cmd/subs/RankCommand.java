@@ -32,36 +32,36 @@ public class RankCommand implements ISubCommand {
             return false;
         }
 
-        if (args.length < 4) {
+        if (args.length < 3) {
             commandSender.sendMessage(ChatColor.RED + "Не хватает аргументов!");
             return true;
         }
 
         Player ps = (Player) commandSender;
-        Player pt = Bukkit.getPlayer(args[1]);
+        Player pt = Bukkit.getPlayer(args[0]);
 
-        if (args[3].equals("accept")) {
-            if (args[2] == "trusted") {
-                if (pl.getGuildManager().makeRank(args[1], Rank.TRUSTED)) {
-                    ps.sendMessage(args[1] + " cтановится вашим заместителем!");
+        if (args[2].equals("accept")) {
+            if (args[1].equals("trusted")) {
+                if (pl.getGuildManager().makeRank(args[0], Rank.TRUSTED)) {
+                    ps.sendMessage(args[0] + " cтановится вашим заместителем!");
                 }
                 else {
                     ps.sendMessage(ChatColor.RED + "Вы ошиблись, проверьте параметры");
                 }
             }
-            if (args[2] == "member") {
-                if(pl.getGuildManager().makeRank(args[1], Rank.MEMBER)){
-                    ps.sendMessage(args[1] + " больше не является заместителем главы гильдии.");
+            if (args[1].equals("member")) {
+                if(pl.getGuildManager().makeRank(args[0], Rank.MEMBER)){
+                    ps.sendMessage(args[0] + " больше не является заместителем главы гильдии.");
                 }
                 else {
                     ps.sendMessage(ChatColor.RED + "Вы ошиблись, проверьте параметры");
                 }
             }
-            if (args[2] == "leader") {
-                if(pl.getGuildManager().makeRank(args[1], Rank.LEADER) &&
+            if (args[1].equals("leader")) {
+                if(pl.getGuildManager().makeRank(args[0], Rank.LEADER) &&
                         pl.getGuildManager().makeRank(ps.getName(), Rank.MEMBER)
                 ){
-                    ps.sendMessage(args[1] + " становится новым лидером гильдии!");
+                    ps.sendMessage(args[0] + " становится новым лидером гильдии!");
 
                 }
                 else {
@@ -72,12 +72,10 @@ public class RankCommand implements ISubCommand {
             return true;
         }
 
-        if (args[3].equals("deny")) {
+        if (args[2].equals("deny")) {
 
             return true;
         }
-
-
         return false;
     }
 }
