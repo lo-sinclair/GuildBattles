@@ -2,6 +2,8 @@ package locb.both.guildbattles.cmd.subs;
 
 import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.cmd.ISubCommand;
+import locb.both.guildbattles.model.Guild;
+import locb.both.guildbattles.model.Member;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -39,11 +41,15 @@ public class RankCommand implements ISubCommand {
 
         Player ps = (Player) commandSender;
         Player pt = Bukkit.getPlayer(args[0]);
+        Guild guild = pl.getDb().findGuildByMember(ps.getName());
 
         if (args[2].equals("accept")) {
             if (args[1].equals("trusted")) {
                 if (pl.getGuildManager().makeRank(args[0], Rank.TRUSTED)) {
                     ps.sendMessage(args[0] + " cтановится вашим заместителем!");
+                    if (pt != null) {
+                        pt.sendMessage("Вы назначены заместителем главы гильдии " + ChatColor.BLUE + "\"" + guild.getName() + "\"");
+                    }
                 }
                 else {
                     ps.sendMessage(ChatColor.RED + "Вы ошиблись, проверьте параметры");
@@ -55,6 +61,9 @@ public class RankCommand implements ISubCommand {
                 }
                 else {
                     ps.sendMessage(ChatColor.RED + "Вы ошиблись, проверьте параметры");
+                    if (pt != null) {
+                        pt.sendMessage(ChatColor.BLUE + ps.getName() + ChatColor.RESET + " снял вас с должно заместителя главы гильдии " + ChatColor.BLUE + "\"" + guild.getName() + "\"");
+                    }
                 }
             }
             if (args[1].equals("leader")) {
@@ -62,7 +71,9 @@ public class RankCommand implements ISubCommand {
                         pl.getGuildManager().makeRank(ps.getName(), Rank.MEMBER)
                 ){
                     ps.sendMessage(args[0] + " становится новым лидером гильдии!");
-
+                    if (pt != null) {
+                        pt.sendMessage("Вы назначены главой гильдии " + ChatColor.BLUE + "\"" + guild.getName() + "\"");
+                    }
                 }
                 else {
                     ps.sendMessage(ChatColor.RED + "Вы ошиблись, проверьте параметры");

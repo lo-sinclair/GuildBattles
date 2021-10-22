@@ -39,6 +39,7 @@ public class MemberEditMenu extends Menu {
         //временное решение для хранения прав
         itemPermitions.put(Material.GOLDEN_HELMET, Rank.LEADER);
         itemPermitions.put(Material.IRON_HELMET, Rank.LEADER);
+        itemPermitions.put(Material.DIAMOND_HELMET, Rank.LEADER);
         itemPermitions.put(Material.GREEN_WOOL, Rank.LEADER);
         itemPermitions.put(Material.RED_WOOL, Rank.LEADER);
         itemPermitions.put(Material.BARRIER, Rank.TRUSTED);
@@ -66,6 +67,11 @@ public class MemberEditMenu extends Menu {
 
                 case IRON_HELMET:
                     gManager.makeMemberAction(playerMenuUsage.getOwner(), playerMenuUsage.getTarget());
+                    e.getWhoClicked().closeInventory();
+                    break;
+
+                case DIAMOND_HELMET:
+                    gManager.giveLeaderAction(playerMenuUsage.getOwner(), playerMenuUsage.getTarget());
                     e.getWhoClicked().closeInventory();
                     break;
 

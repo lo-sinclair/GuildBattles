@@ -289,8 +289,6 @@ public class SQLDatabase {
     }
 
 
-
-
     public Member findMemberByName(String name) {
         Member member = null;
 
@@ -397,6 +395,37 @@ public class SQLDatabase {
                     result.getLong("create_date"),
                     result.getDouble("balance"),
                     result.getBoolean("allow_friendly_fire")
+                );
+            }
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return guild;
+    }
+
+
+    public Guild findGuildByMember(String member_name){
+        Guild guild = null;
+        try {
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+
+            String q = "SELECT * FROM gb_guilds WHERE `id` = " +
+                    "(SELECT `guild_id` FROM `gb_members` WHERE `name` = '%s')";
+
+            ResultSet result = stmt.executeQuery(String.format(q, member_name));
+
+            if(result.next()) {
+                guild = new Guild(
+                        result.getInt("id"),
+                        result.getString("name"),
+                        result.getLong("create_date"),
+                        result.getDouble("balance"),
+                        result.getBoolean("allow_friendly_fire")
                 );
             }
             stmt.close();

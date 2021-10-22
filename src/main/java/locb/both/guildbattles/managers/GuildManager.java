@@ -76,6 +76,13 @@ public class GuildManager {
         sender.spigot().sendMessage(msg);
     }
 
+    public void giveLeaderAction(Player sender, OfflinePlayer target) {
+        TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены, что хотите передать права на управление гильдией игроку " +
+                target.getName() + "?",
+                "/guild rank " + target.getName() + " leader accept", "/guild rank " + target.getName() + " leader deny");
+        sender.spigot().sendMessage(msg);
+    }
+
     public void assignPrivateAction(Player sender, OfflinePlayer target, boolean allow) {
         TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены?",
                 "/guild privat " + target.getName() + " " + (allow ? "true" : "false") + " accept", "/guild privat " + target.getName() + " " + (allow ? "true" : "false") + " deny");
@@ -119,7 +126,6 @@ public class GuildManager {
     public boolean makeRank(String name, Rank rank) {
         Member member = pl.getDb().findMemberByName(name);
         if(member != null) {
-            System.out.println(pl.getRankManager().playerRank(member));
             if( pl.getRankManager().playerRank(member) == rank) {
                 return false;
             }
