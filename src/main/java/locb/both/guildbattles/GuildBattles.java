@@ -2,10 +2,13 @@ package locb.both.guildbattles;
 
 import locb.both.guildbattles.cmd.GuildCommand;
 import locb.both.guildbattles.cooldowns.TimeCooldown;
+import locb.both.guildbattles.data.SQLDatabase;
+import locb.both.guildbattles.data.YAML;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
 import locb.both.guildbattles.listeners.MenuListener;
 import locb.both.guildbattles.managers.EconomyManager;
 import locb.both.guildbattles.managers.GuildManager;
+import locb.both.guildbattles.managers.PrivatManager;
 import locb.both.guildbattles.managers.RankManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,10 +26,13 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
     private static GuildBattles instance;
     Logger log = Logger.getLogger("Minecraft");
     private SQLDatabase db;
+    private YAML privatData;
 
     //managers
     private RankManager rankManager;
     private GuildManager guildManager;
+    private PrivatManager privatManager;
+
 
     private static final HashMap<Player, PlayerMenuUsage> playerMenuUsageMap = new HashMap<>();
 
@@ -50,6 +56,9 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
             saveDefaultConfig();
         }
 
+        //saveResource("home/home.yml", false);
+        //privatData = new YAML("privat.yaml");
+
         try {
             db = new SQLDatabase();
         } catch (Exception e) {
@@ -60,6 +69,7 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
         EconomyManager.init();
         this.guildManager = new GuildManager();
         this.rankManager = new RankManager();
+        this.privatManager = new PrivatManager();
 
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 
@@ -108,11 +118,16 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
         return db;
     }
 
+    public static YAML getPrivateData(){ return getInstance().privatData; }
+
     public GuildManager getGuildManager() {
         return guildManager;
     }
     public RankManager getRankManager() {
         return rankManager;
+    }
+    public PrivatManager getPrivatManager() {
+        return privatManager;
     }
 
     public static GuildBattles getInstance() {

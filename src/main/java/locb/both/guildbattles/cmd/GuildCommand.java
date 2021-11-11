@@ -31,6 +31,7 @@ public class GuildCommand implements CommandExecutor {
         subCommands.put("rank", new RankCommand());
         subCommands.put("privat", new PrivatCommand());
         subCommands.put("kick", new KickCommand());
+        subCommands.put("territory", new TerritoryCommand());
     }
 
     @Override

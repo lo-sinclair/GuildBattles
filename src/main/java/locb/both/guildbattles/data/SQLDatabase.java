@@ -1,4 +1,4 @@
-package locb.both.guildbattles;
+package locb.both.guildbattles.data;
 
 import locb.both.guildbattles.GuildBattles;
 import locb.both.guildbattles.model.Guild;
@@ -59,8 +59,10 @@ public class SQLDatabase {
                 + "`name` VARCHAR(30) NOT NULL,"
                 + "`create_date` TIMESTAMP NOT NULL,"
                 + "`balance` DOUBLE(64, 2) DEFAULT 0.0,"
-                + "`allow_friendly_fire` TINYINT(1) DEFAULT 0);";
-
+                + "`allow_friendly_fire` TINYINT(1) DEFAULT 0,"
+                + "`territory` VARCHAR(100),"
+                + "`home` VARCHAR(100),"
+                + " UNIQUE (`name`));";
         s.executeUpdate(q);
 
         q = "CREATE TABLE IF NOT EXISTS gb_members ("
@@ -394,7 +396,9 @@ public class SQLDatabase {
                     result.getString("name"),
                     result.getLong("create_date"),
                     result.getDouble("balance"),
-                    result.getBoolean("allow_friendly_fire")
+                    result.getBoolean("allow_friendly_fire"),
+                    result.getString("territory"),
+                    result.getString("home")
                 );
             }
             stmt.close();
@@ -425,7 +429,9 @@ public class SQLDatabase {
                         result.getString("name"),
                         result.getLong("create_date"),
                         result.getDouble("balance"),
-                        result.getBoolean("allow_friendly_fire")
+                        result.getBoolean("allow_friendly_fire"),
+                        result.getString("territory"),
+                        result.getString("home")
                 );
             }
             stmt.close();
@@ -437,6 +443,61 @@ public class SQLDatabase {
 
         return guild;
     }
+
+    public List<String> findGuildsNames(){
+        List<String>guildsNames = new ArrayList<>();
+
+        try {
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+            String q = "SELECT `name` FROM gb_guilds;";
+            ResultSet result = stmt.executeQuery(q);
+
+            while (result.next()) {
+                guildsNames.add(result.getString("name"));
+            }
+            stmt.close();
+            conn.close();
+
+        } catch ( Exception e) {
+            e.printStackTrace();
+        }
+
+        return guildsNames;
+    }
+
+
+    public Guild findGuildByName(String name){
+        Guild guild = null;
+        try {
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+
+            String q = "SELECT * FROM gb_guilds WHERE `id` = '%s';";
+
+            ResultSet result = stmt.executeQuery(String.format(q, name));
+
+            if(result.next()) {
+                guild = new Guild(
+                        result.getInt("id"),
+                        result.getString("name"),
+                        result.getLong("create_date"),
+                        result.getDouble("balance"),
+                        result.getBoolean("allow_friendly_fire"),
+                        result.getString("territory"),
+                        result.getString("home")
+                );
+            }
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return guild;
+    }
+
 
 
     public Connection getConnection() throws SQLException {

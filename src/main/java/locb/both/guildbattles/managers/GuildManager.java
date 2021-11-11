@@ -3,7 +3,6 @@ package locb.both.guildbattles.managers;
 import locb.both.guildbattles.GuildBattles;
 import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.Rank;
-import locb.both.guildbattles.conversation.ConvPrefix;
 //import locb.both.guildbattles.conversation.GuildNamePrompt;
 import locb.both.guildbattles.cooldowns.TimeCooldown;
 import locb.both.guildbattles.gui.GuiToolKit;
@@ -33,16 +32,16 @@ public class GuildManager {
 
     public void createGuildAction(Player p){
 
+
         if(!EconomyManager.takeMoney(p, 10)) {
             p.sendMessage(ChatColor.RED + "У вас недостаточно средств на счете!");
             return;
         }
 
         ConversationFactory cf = new ConversationFactory(pl);
-        Conversation conv = cf.withFirstPrompt(new GuildNamePrompt())
+        Conversation conv = cf.withFirstPrompt(new GuildNamePrompt("[a-zA-Z0-9_-]+"))
                 .withLocalEcho(false)
-                .withTimeout(10)
-                .withPrefix(new ConvPrefix())
+                .withTimeout(30)
                 .buildConversation(p);
         conv.begin();
     }
@@ -174,7 +173,7 @@ public class GuildManager {
 
     private void createNewGuild(String guild_name, Player p) {
         long ts_naw = System.currentTimeMillis();
-        Guild guild = new Guild(0, guild_name, ts_naw, 0.0, false);
+        Guild guild = new Guild(0, guild_name, ts_naw, 0.0, false, null, null);
 
         int guild_id = pl.getDb().createGuild(guild);
 
@@ -199,14 +198,31 @@ public class GuildManager {
     }
 
 
-    private class GuildNamePrompt extends StringPrompt {
-        @Override
-        public String getPromptText(ConversationContext context) {
-            return "Введите имя гильдии";
+    private class GuildNamePrompt extends RegexPrompt {
+
+
+        public GuildNamePrompt(String regex) {
+            super(regex);
         }
 
         @Override
-        public Prompt acceptInput(ConversationContext context, String guild_name) {
+        public String getPromptText(ConversationContext context) {
+            return "Введите имя гильдии. (Используйте только латинские буквы, цифры и символы почеркивания). ";
+        }
+
+
+
+        @Override
+        protected Prompt acceptValidatedInput(ConversationContext context, String guild_name) {
+            if(guild_name.length() > 30 ) {
+                context.getForWhom().sendRawMessage(Messages.getPrefix() +  ChatColor.RED + "Длина названия должна быть не более 30-ти символов!");
+                return END_OF_CONVERSATION;
+            }
+
+            if( pl.getDb().findGuildByName(guild_name) != null) {
+                context.getForWhom().sendRawMessage(Messages.getPrefix() +  ChatColor.RED + "Такая гильдия уже существует. Придумайте другое название!");
+                return END_OF_CONVERSATION;
+            }
             Player p = (Player)context.getForWhom();
 
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, 1, 1);
@@ -214,6 +230,13 @@ public class GuildManager {
             context.getForWhom().sendRawMessage(Messages.getPrefix() + "Гильдия создана!");
             //context.setSessionData("guildName", guild_name);
             return END_OF_CONVERSATION;
+
+        }
+
+        @Override
+        protected String getFailedValidationText(ConversationContext context,
+                                                 String invalidInput) {
+            return Messages.getPrefix() + ChatColor.RED + "Название может содержать только латинские буквы, цифры, и символы тире и подчеркивания!";
         }
     }
 

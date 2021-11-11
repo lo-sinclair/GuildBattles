@@ -40,7 +40,6 @@ public class NoGuildMenu extends Menu {
         switch (e.getCurrentItem().getType()) {
             case WHITE_BANNER:
                 e.getWhoClicked().closeInventory();
-                e.getWhoClicked().sendMessage("Создается гильдия");
                 manader.createGuildAction(playerMenuUsage.getOwner());
                 break;
 

@@ -68,6 +68,10 @@ public class GuildMenu extends Menu {
                     new MembersMenu(playerMenuUsage).open();
                     break;
 
+                case WOODEN_AXE:
+                    new PrivatMenu(playerMenuUsage).open();
+                    break;
+
                 case BARRIER:
                     e.getWhoClicked().closeInventory();
                     manager.leaveGuildAction(playerMenuUsage.getOwner());
