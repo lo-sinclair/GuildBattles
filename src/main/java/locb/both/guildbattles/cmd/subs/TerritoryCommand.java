@@ -42,7 +42,7 @@ public class TerritoryCommand implements ISubCommand {
 
         if(args[0].equals("set")) {
             if (args[1].equals("accept")) {
-                if(pl.getPrivatManager().privatRegion(ps)) {
+                if(pl.getPrivatManager().setTerritory(ps)) {
                     ps.sendMessage(Messages.getPrefix() + ChatColor.GREEN + "Территория теперь ваша!");
                 }
             }
@@ -53,7 +53,15 @@ public class TerritoryCommand implements ISubCommand {
         }
 
         if(args[0].equals("remove")) {
+            if (args[1].equals("accept")) {
+                if(pl.getPrivatManager().removeTerritory(ps)) {
+                    ps.sendMessage(Messages.getPrefix() + ChatColor.GREEN + "Территория удалена!");
+                }
+            }
 
+            if (args[1].equals("deny")) {
+                return true;
+            }
         }
 
         return false;

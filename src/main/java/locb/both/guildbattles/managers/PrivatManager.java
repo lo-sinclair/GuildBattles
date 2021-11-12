@@ -26,21 +26,52 @@ public class PrivatManager {
     }
 
 
-    public void privateTerritoryAction(Player p){
+    public void setTerritoryAction(Player p){
         TextComponent msg = GuiToolKit.confirmMessage(p, "Установить приват на эту территорию?",
                 "/guild territory set accept", "/guild territory set deny");
         p.spigot().sendMessage(msg);
     }
 
+    public void removeTerritoryAction(Player p){
+        TextComponent msg = GuiToolKit.confirmMessage(p, "Вы действительноо хотите удалить территорию?",
+                "/guild territory remove accept", "/guild territory remove deny");
+        p.spigot().sendMessage(msg);
+    }
 
-    public boolean privatRegion(Player p){
+    public boolean removeTerritory(Player p) {
         Guild guild = pl.getDb().findGuildByMember(p.getName());
 
         if(guild == null){
             return false;
         }
 
-        if(guild.getTerritory() != null || guild.getTerritory() != "+") {
+        if(guild.getTerritory().isEmpty() || guild.getTerritory().equals("+")) {
+            p.sendMessage(Messages.getPrefix() + ChatColor.RED + "У вас еще нет территории.");
+            return false;
+        }
+
+        Location loc = p.getLocation();
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionManager regionManager = container.get(BukkitAdapter.adapt(loc.getWorld()));
+
+        String region_name = guild.getTerritory();
+        System.out.println(regionManager.removeRegion(region_name));
+
+        guild.setTerritory("+");
+        pl.getDb().updateGuild(guild);
+        pl.updateAllPlayerMenuUsage();
+
+        return true;
+    }
+
+    public boolean setTerritory(Player p){
+        Guild guild = pl.getDb().findGuildByMember(p.getName());
+
+        if(guild == null){
+            return false;
+        }
+
+        if( ! (guild.getTerritory().isEmpty()  || guild.getTerritory().equals("+")) ) {
             p.sendMessage(Messages.getPrefix() + ChatColor.RED + "У вас уже есть территория.");
             return false;
         }
@@ -77,13 +108,17 @@ public class PrivatManager {
 
         guild.setTerritory(region_name);
         pl.getDb().updateGuild(guild);
+        pl.updateAllPlayerMenuUsage();
 
         //p.sendMessage(Messages.getPrefix() + ChatColor.GREEN + "Территория теперь ваша!");
 
         //ProtectedRegion region = regionManager.getRegion(region_name);
         return true;
+        }
 
-    }
+
+
+
 
     public void removeRegion(Guild guild, Player p){
         if(guild.getTerritory() == null || guild.getTerritory() == "+") {

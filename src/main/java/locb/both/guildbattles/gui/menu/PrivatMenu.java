@@ -50,12 +50,13 @@ public class PrivatMenu extends Menu {
         if( getOwnerRank().getLevel() <= itemPermitions.get( e.getCurrentItem().getType() ).getLevel() ) {
             switch (e.getCurrentItem().getType()) {
                 case LANTERN:
-                    pManager.privateTerritoryAction((Player) e.getWhoClicked());
+                    pManager.setTerritoryAction((Player) e.getWhoClicked());
                     e.getWhoClicked().closeInventory();
                     break;
 
                 case SOUL_LANTERN:
-                    new MembersListMenu(playerMenuUsage, Rank.MEMBER).open();
+                    pManager.removeTerritoryAction((Player) e.getWhoClicked());
+                    e.getWhoClicked().closeInventory();
                     break;
 
                 case WHITE_BANNER:
@@ -87,11 +88,19 @@ public class PrivatMenu extends Menu {
         meta = info.getItemMeta();
         meta.setDisplayName("Информация");
         lore = new ArrayList<>();
-        lore.add("Территория приватится на 100 блоков по всем 4 сторонам от игрока, вверх и вниз приватится полностью\n" +
-                "          На заприваченной территтории невозможно только ломать блоки. Открывать двери, сундуки и т.д. можно \n" +
-                "          Если дать доступ к привату заместителю, то он может выгонять всех, кроме главы и других заместителей\n" +
-                "          Если дать доступ к привату обычному рядовому, то он может только строить или ломать \n" +
-                "          Выдавать доступ к привату можно через список участников");
+        lore.add("Территория приватится на 100 блоков");
+        lore.add("по всем 4 сторонам от игрока, вверх");
+        lore.add("и вниз приватится полностью.");
+        lore.add("На заприваченной территтории");
+        lore.add("невозможно только ломать блоки. ");
+        lore.add("Открывать двери, сундуки и т.д. можно.");
+        lore.add("Если дать доступ к привату заместителю,");
+        lore.add("то он может выгонять всех, кроме главы");
+        lore.add("и других заместителей.");
+        lore.add("Если дать доступ к привату обычному рядовому,");
+        lore.add("то он может только строить или ломать.");
+        lore.add("Выдавать доступ к привату можно через список участников.");
+
         meta.setLore(lore);
 
         info.setItemMeta(meta);

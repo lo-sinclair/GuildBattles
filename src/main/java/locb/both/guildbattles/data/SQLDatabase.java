@@ -60,8 +60,8 @@ public class SQLDatabase {
                 + "`create_date` TIMESTAMP NOT NULL,"
                 + "`balance` DOUBLE(64, 2) DEFAULT 0.0,"
                 + "`allow_friendly_fire` TINYINT(1) DEFAULT 0,"
-                + "`territory` VARCHAR(100),"
-                + "`home` VARCHAR(100),"
+                + "`territory` VARCHAR(100) DEFAULT '',"
+                + "`home` VARCHAR(100) DEFAULT '',"
                 + " UNIQUE (`name`));";
         s.executeUpdate(q);
 
@@ -92,14 +92,16 @@ public class SQLDatabase {
             Statement stmt = conn.createStatement();
 
 
-            String q = "INSERT INTO gb_guilds (`name`, `create_date`, `balance`, `allow_friendly_fire`) "
-                    + "VALUES ('%s', %d, %.2f, %d);";
+            String q = "INSERT INTO gb_guilds (`name`, `create_date`, `balance`, `allow_friendly_fire`, `territory`, `home`) "
+                    + "VALUES ('%s', %d, %.2f, %d, '%s', '%s');";
 
             count = stmt.executeUpdate(String.format(Locale.ROOT, q,
                     guild.getName(),
                     guild.getCreateDate(),
                     guild.getBalance(),
-                    (guild.isAllowFriendlyFire() ? 1 : 0)
+                    (guild.isAllowFriendlyFire() ? 1 : 0),
+                    guild.getTerritory(),
+                    guild.getHome()
             ));
 
             ResultSet keys = stmt.getGeneratedKeys();
@@ -127,8 +129,10 @@ public class SQLDatabase {
                     "`name` = '%s'," +
                     "`create_date` = %d," +
                     "`balance` = %.2f," +
-                    "`allow_friendly_fire` = %d " +
-                    "WHERE `id` = %d;";
+                    "`allow_friendly_fire` = %d," +
+                    "`territory` = '%s'," +
+                    "`home` = '%s' " +
+            "WHERE `id` = %d;";
 
 
             count = stmt.executeUpdate(String.format(Locale.ROOT, q,
@@ -136,6 +140,8 @@ public class SQLDatabase {
                     guild.getCreateDate(),
                     guild.getBalance(),
                     (guild.isAllowFriendlyFire() ? 1 : 0),
+                    guild.getTerritory(),
+                    guild.getHome(),
                     guild.getId()
             ));
 
