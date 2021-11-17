@@ -40,8 +40,17 @@ public class MemberEditMenu extends Menu {
         itemPermitions.put(Material.GOLDEN_HELMET, Rank.LEADER);
         itemPermitions.put(Material.IRON_HELMET, Rank.LEADER);
         itemPermitions.put(Material.DIAMOND_HELMET, Rank.LEADER);
-        itemPermitions.put(Material.GREEN_WOOL, Rank.LEADER);
-        itemPermitions.put(Material.RED_WOOL, Rank.LEADER);
+
+        //костыль на время
+        if(playerMenuUsage.getMember().isPrivat() && getOwnerRank().equals(Rank.TRUSTED) ) {
+            itemPermitions.put(Material.GREEN_WOOL, Rank.TRUSTED);
+            itemPermitions.put(Material.RED_WOOL, Rank.TRUSTED);
+        }
+        else {
+            itemPermitions.put(Material.GREEN_WOOL, Rank.LEADER);
+            itemPermitions.put(Material.RED_WOOL, Rank.LEADER);
+        }
+
         itemPermitions.put(Material.BARRIER, Rank.TRUSTED);
         itemPermitions.put(Material.WHITE_BANNER, Rank.MEMBER);
     }

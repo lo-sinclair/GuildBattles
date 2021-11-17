@@ -62,7 +62,6 @@ public class PrivatMenu extends Menu {
                 case WHITE_BANNER:
                     new GuildMenu(playerMenuUsage).open();
                     break;
-
             }
         }
     }
@@ -99,7 +98,8 @@ public class PrivatMenu extends Menu {
         lore.add("и других заместителей.");
         lore.add("Если дать доступ к привату обычному рядовому,");
         lore.add("то он может только строить или ломать.");
-        lore.add("Выдавать доступ к привату можно через список участников.");
+        lore.add("Выдавать доступ к привату можно ");
+        lore.add("через список участников.");
 
         meta.setLore(lore);
 

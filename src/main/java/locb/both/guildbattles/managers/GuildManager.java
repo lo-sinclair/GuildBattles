@@ -65,26 +65,26 @@ public class GuildManager {
 
     public void makeTrustedAction(Player sender, OfflinePlayer target) {
         TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены?",
-                "/guild rank " + target.getName() + " trusted accept", "/guild rank " + target.getName() + " trusted deny");
+                "/guild rank " + target.getUniqueId().toString() + " trusted accept", "/guild rank " + target.getUniqueId().toString() + " trusted deny");
         sender.spigot().sendMessage(msg);
     }
 
     public void makeMemberAction(Player sender, OfflinePlayer target) {
         TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены?",
-                "/guild rank " + target.getName() + " member accept", "/guild rank " + target.getName() + " member deny");
+                "/guild rank " + target.getUniqueId().toString() + " member accept", "/guild rank " + target.getUniqueId().toString() + " member deny");
         sender.spigot().sendMessage(msg);
     }
 
     public void giveLeaderAction(Player sender, OfflinePlayer target) {
         TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены, что хотите передать права на управление гильдией игроку " +
                 target.getName() + "?",
-                "/guild rank " + target.getName() + " leader accept", "/guild rank " + target.getName() + " leader deny");
+                "/guild rank " + target.getUniqueId().toString() + " leader accept", "/guild rank " + target.getUniqueId().toString() + " leader deny");
         sender.spigot().sendMessage(msg);
     }
 
     public void assignPrivateAction(Player sender, OfflinePlayer target, boolean allow) {
         TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены?",
-                "/guild privat " + target.getName() + " " + (allow ? "true" : "false") + " accept", "/guild privat " + target.getName() + " " + (allow ? "true" : "false") + " deny");
+                "/guild privat " + target.getUniqueId().toString() + " " + (allow ? "true" : "false") + " accept", "/guild privat " + target.getName() + " " + (allow ? "true" : "false") + " deny");
         sender.spigot().sendMessage(msg);
     }
 
@@ -110,8 +110,8 @@ public class GuildManager {
     }
 
 
-    public boolean assignPrivate(String name, boolean allow) {
-        Member member = pl.getDb().findMemberByName(name);
+    public boolean assignPrivate(OfflinePlayer pt, boolean allow) {
+        Member member = pl.getDb().findMemberByUUID(pt.getUniqueId().toString());
         if(member != null) {
             member.setPrivat(allow);
             pl.getDb().updateMember(member);
@@ -122,8 +122,8 @@ public class GuildManager {
     }
 
 
-    public boolean makeRank(String name, Rank rank) {
-        Member member = pl.getDb().findMemberByName(name);
+    public boolean makeRank(OfflinePlayer pt, Rank rank) {
+        Member member = pl.getDb().findMemberByUUID(pt.getUniqueId().toString());
         if(member != null) {
             if( pl.getRankManager().playerRank(member) == rank) {
                 return false;

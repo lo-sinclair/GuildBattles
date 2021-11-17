@@ -335,6 +335,44 @@ public class SQLDatabase {
         return member;
     }
 
+    public Member findMemberByUUID(String uuid) {
+        Member member = null;
+
+        try {
+            Connection conn = getConnection();
+            Statement stmt = conn.createStatement();
+
+            String q = "SELECT * FROM gb_members WHERE `uuid` = '%s'";
+
+            ResultSet result = stmt.executeQuery(String.format(q, uuid));
+
+            if(result.next()) {
+
+                member = new Member(
+                        result.getInt("id"),
+                        result.getString("name"),
+                        UUID.fromString(result.getString("uuid")),
+                        result.getInt("guild_id"),
+                        result.getLong("join_date"),
+                        result.getString("role"),
+                        result.getInt("rival_kills"),
+                        result.getInt("friendly_fire"),
+                        result.getInt("deaths"),
+                        result.getDouble("deposit"),
+                        result.getBoolean("privat")
+                );
+            }
+
+            stmt.close();
+            conn.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return member;
+    }
+
 
 
     public  List<Member> findMembersByGuild(Integer guild_id, String role) {

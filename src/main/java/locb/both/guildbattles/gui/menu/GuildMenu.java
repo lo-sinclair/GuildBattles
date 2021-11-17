@@ -146,7 +146,9 @@ public class GuildMenu extends Menu {
         // Железный меч
         ItemStack battle = new ItemStack(Material.IRON_SWORD, 1);
         meta = house.getItemMeta();
+        lore = new ArrayList<>();
         meta.setDisplayName(Messages.getNotice("messages.menu.guild.battle.title"));
+        meta.setLore(lore);
         battle.setItemMeta(meta);
 
 
