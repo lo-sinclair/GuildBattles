@@ -6,10 +6,7 @@ import locb.both.guildbattles.data.SQLDatabase;
 import locb.both.guildbattles.data.YAML;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
 import locb.both.guildbattles.listeners.MenuListener;
-import locb.both.guildbattles.managers.EconomyManager;
-import locb.both.guildbattles.managers.GuildManager;
-import locb.both.guildbattles.managers.PrivatManager;
-import locb.both.guildbattles.managers.RankManager;
+import locb.both.guildbattles.managers.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -32,6 +29,7 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
     private RankManager rankManager;
     private GuildManager guildManager;
     private PrivatManager privatManager;
+    private TeleportManager teleportManager;
 
 
     private static final HashMap<Player, PlayerMenuUsage> playerMenuUsageMap = new HashMap<>();
@@ -70,6 +68,7 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
         this.guildManager = new GuildManager();
         this.rankManager = new RankManager();
         this.privatManager = new PrivatManager();
+        this.teleportManager = new TeleportManager();
 
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 
@@ -129,6 +128,7 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
     public PrivatManager getPrivatManager() {
         return privatManager;
     }
+    public TeleportManager getTeleportManager() {return teleportManager;}
 
     public static GuildBattles getInstance() {
         return instance;

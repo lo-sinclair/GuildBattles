@@ -1,6 +1,11 @@
 package locb.both.guildbattles.managers;
 
 import locb.both.guildbattles.GuildBattles;
+import locb.both.guildbattles.gui.GuiToolKit;
+import locb.both.guildbattles.workers.TeleportWorker;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -17,36 +22,15 @@ public class TeleportManager {
         this.pl = GuildBattles.getInstance();
     }
 
-    public void start(int delay){
-
-        startScheduler = pl.getServer().getScheduler().scheduleSyncRepeatingTask(pl, new Runnable() {
-            int stopwatch = 0;
-            boolean duIt;
-            @Override
-            public void run() {
-                if(stopwatch > delay) {
-                    stop(startScheduler);
-
-                }
-                stopwatch++;
-            }
-        }, 0L, 20L);
+    TeleportWorker getTeleportWorker(Player ps){
+        return new TeleportWorker(ps);
     }
 
-    public void teleport() {
-        pl.getServer().getScheduler().scheduleSyncRepeatingTask(pl, new Runnable() {
-            @Override
-            public void run() {
-                tpPlayers.removeIf(tpp -> tpp.getPlayer() == null);
-            }
-        }, 0L, 20L);
+    public void callGuildAction(Player ps){
+        TextComponent msg = GuiToolKit.confirmMessage(ps, "Вы уверены, что хотите созвать гильдию?",
+                "/guild teleport members accept", "/guild teleport members deny");
+        ps.spigot().sendMessage(msg);
     }
-
-
-    public void stop(int scheduler) {
-        pl.getServer().getScheduler().cancelTask(scheduler);
-    }
-
 
 
 }

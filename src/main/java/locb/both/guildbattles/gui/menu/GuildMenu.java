@@ -1,5 +1,6 @@
 package locb.both.guildbattles.gui.menu;
 
+import locb.both.guildbattles.GuildBattles;
 import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.gui.Menu;
@@ -9,6 +10,7 @@ import locb.both.guildbattles.model.Guild;
 import locb.both.guildbattles.model.Member;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -27,12 +29,13 @@ public class GuildMenu extends Menu {
     public GuildMenu(PlayerMenuUsage playerMenuUsage) {
         super(playerMenuUsage);
         manager = new GuildManager();
+
         //rank = GuildBattles.getInstance().getRankManager().playerRank(playerMenuUsage.getOwner());
 
         //временное решение для хранения прав
         itemPermitions.put(Material.CYAN_BANNER, Rank.MEMBER);
         itemPermitions.put(Material.BOOK, Rank.MEMBER);
-        itemPermitions.put(Material.BEACON, Rank.MEMBER);
+        itemPermitions.put(Material.BEACON, Rank.LEADER);
         itemPermitions.put(Material.CHEST, Rank.MEMBER);
         itemPermitions.put(Material.RED_BED, Rank.MEMBER);
         itemPermitions.put(Material.IRON_SWORD, Rank.MEMBER);
@@ -61,6 +64,11 @@ public class GuildMenu extends Menu {
             switch (e.getCurrentItem().getType()) {
                 case LIME_DYE:
                     manager.inviteToGuildAction(playerMenuUsage.getOwner());
+                    e.getWhoClicked().closeInventory();
+                    break;
+
+                case BEACON:
+                    GuildBattles.getInstance().getTeleportManager().callGuildAction((Player)e.getWhoClicked());
                     e.getWhoClicked().closeInventory();
                     break;
 

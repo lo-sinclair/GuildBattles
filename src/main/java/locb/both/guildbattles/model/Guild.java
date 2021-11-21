@@ -108,4 +108,8 @@ public class Guild {
 
         return count;
     }
+
+    public List<Member> getMembers(){
+        return members;
+    }
 }
