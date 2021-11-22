@@ -10,6 +10,7 @@ import locb.both.guildbattles.model.Guild;
 import locb.both.guildbattles.model.Member;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -92,6 +93,17 @@ public class GuildManager {
         TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены, что хотите выгнать " + target.getName() + "из гильдии?",
                 "/guild kick " + target.getName() + " accept", "/guild kick " + target.getName() + " deny");
         sender.spigot().sendMessage(msg);
+    }
+
+    public void sendMoneyToGuild(Player ps){
+
+        ConversationFactory cf = new ConversationFactory(pl);
+        Conversation conv = cf.withFirstPrompt(new takeMoneyPrompt())
+                .withLocalEcho(false)
+                .withTimeout(30)
+                .buildConversation(ps);
+        conv.begin();
+
     }
 
 
@@ -198,8 +210,36 @@ public class GuildManager {
     }
 
 
-    private class GuildNamePrompt extends RegexPrompt {
 
+    private class takeMoneyPrompt extends NumericPrompt {
+
+        @Override
+        public String getPromptText(ConversationContext context) {
+            return Messages.getPrefix() + "Введите сумму перевода";
+        }
+
+        @Override
+        protected Prompt acceptValidatedInput(ConversationContext context, Number number) {
+
+            Player p = (Player)context.getForWhom();
+            if(!EconomyManager.takeMoney(p, number.doubleValue())) {
+                p.sendMessage(Messages.getPrefix() + ChatColor.RED + "У вас недостаточно средств на счете!");
+                return END_OF_CONVERSATION;
+            }
+
+            Guild g = pl.getDb().findGuildByMember(p.getName());
+            g.setBalance(g.getBalance() + number.doubleValue());
+            pl.getDb().updateGuild(g);
+            pl.updateAllPlayerMenuUsage();
+            System.out.println(g.getBalance());
+            context.getForWhom().sendRawMessage(Messages.getPrefix() + "Гильдия " + g.getName() + " благодарит вас за перевод!");
+            return END_OF_CONVERSATION;
+        }
+    }
+
+
+
+    private class GuildNamePrompt extends RegexPrompt {
 
         public GuildNamePrompt(String regex) {
             super(regex);
@@ -209,7 +249,6 @@ public class GuildManager {
         public String getPromptText(ConversationContext context) {
             return "Введите имя гильдии. (Используйте только латинские буквы, цифры и символы почеркивания). ";
         }
-
 
 
         @Override

@@ -13,9 +13,6 @@ import java.util.List;
 
 public class TeleportManager {
     private final GuildBattles pl;
-    private List<Player> tpPlayers = new ArrayList<>();
-
-    int startScheduler;
 
 
     public TeleportManager() {

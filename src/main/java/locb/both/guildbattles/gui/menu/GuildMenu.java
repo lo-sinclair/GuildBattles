@@ -39,7 +39,7 @@ public class GuildMenu extends Menu {
         itemPermitions.put(Material.CHEST, Rank.MEMBER);
         itemPermitions.put(Material.RED_BED, Rank.MEMBER);
         itemPermitions.put(Material.IRON_SWORD, Rank.MEMBER);
-        itemPermitions.put(Material.WOODEN_AXE, Rank.MEMBER);
+        itemPermitions.put(Material.WOODEN_AXE, Rank.LEADER);
         itemPermitions.put(Material.GOLD_INGOT, Rank.MEMBER);
         itemPermitions.put(Material.LIME_DYE, Rank.TRUSTED);
         itemPermitions.put(Material.NETHER_STAR, Rank.MEMBER);
@@ -78,6 +78,17 @@ public class GuildMenu extends Menu {
 
                 case WOODEN_AXE:
                     new PrivatMenu(playerMenuUsage).open();
+                    break;
+
+                case GOLD_INGOT:
+                    if(e.isLeftClick()) {
+                        manager.sendMoneyToGuild((Player) e.getWhoClicked());
+                        e.getWhoClicked().closeInventory();
+                    }
+                    if(e.isRightClick()) {
+
+                        e.getWhoClicked().closeInventory();
+                    }
                     break;
 
                 case BARRIER:
@@ -172,7 +183,11 @@ public class GuildMenu extends Menu {
         meta = treasury.getItemMeta();
         meta.setDisplayName(Messages.getNotice("messages.menu.guild.treasury.title"));
         lore = new ArrayList<>();
-        lore.add(Messages.getNotice("messages.menu.guild.treasury.description"));
+        lore.add("Баланс: " + Double.toString(g.getBalance()) );
+        lore.add("ЛКМ: Пополнить казну");
+        if(getOwnerRank().equals(Rank.LEADER)) {
+            lore.add("ПКМ: Перевод монет на другую гильдию");
+        }
         meta.setLore(lore);
         treasury.setItemMeta(meta);
 
