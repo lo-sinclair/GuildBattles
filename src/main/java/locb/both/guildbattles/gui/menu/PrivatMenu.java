@@ -12,6 +12,7 @@ import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -125,6 +126,7 @@ public class PrivatMenu extends Menu {
         patterns.add(new Pattern(DyeColor.GRAY, PatternType.BORDER));
         assert meta != null;
         ((BannerMeta) meta).setPatterns(patterns);
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         left.setItemMeta(meta);
 
 

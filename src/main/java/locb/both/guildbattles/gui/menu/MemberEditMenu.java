@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -124,6 +125,7 @@ public class MemberEditMenu extends Menu {
             lore.add("Может выгнать игрока");
             lore.add("Может установить алтарь и строить в битве гильдий");
             meta.setLore(lore);
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             signRank.setItemMeta(meta);
         }
         if(getTargetRank().equals(Rank.TRUSTED)) {
@@ -131,12 +133,15 @@ public class MemberEditMenu extends Menu {
             signRank = new ItemStack(Material.IRON_HELMET, 1);
             meta = signRank.getItemMeta();
             meta.setDisplayName("Сделать рядовым");
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             signRank.setItemMeta(meta);
         }
 
         ItemStack assignLeader = new ItemStack(Material.DIAMOND_HELMET, 1);
         meta = assignLeader.getItemMeta();
         meta.setDisplayName("Передать главу");
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
         assignLeader.setItemMeta(meta);
 
         ItemStack privat;
@@ -174,6 +179,7 @@ public class MemberEditMenu extends Menu {
         patterns.add(new Pattern(DyeColor.GRAY, PatternType.BORDER));
         assert meta != null;
         ((BannerMeta) meta).setPatterns(patterns);
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         left.setItemMeta(meta);
 
 

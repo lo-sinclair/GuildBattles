@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -167,6 +168,8 @@ public class GuildMenu extends Menu {
         meta = house.getItemMeta();
         lore = new ArrayList<>();
         meta.setDisplayName(Messages.getNotice("messages.menu.guild.battle.title"));
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        //meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         meta.setLore(lore);
         battle.setItemMeta(meta);
 
@@ -175,6 +178,7 @@ public class GuildMenu extends Menu {
         ItemStack privat = new ItemStack(Material.WOODEN_AXE, 1);
         meta = privat.getItemMeta();
         meta.setDisplayName(Messages.getNotice("messages.menu.guild.private.title"));
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         privat.setItemMeta(meta);
 
 
@@ -227,6 +231,7 @@ public class GuildMenu extends Menu {
         PotionMeta potionMeta = (PotionMeta) friendlyFire.getItemMeta();
         potionMeta.setDisplayName(Messages.getNotice("messages.menu.guild.friendlyFire.title"));
         potionMeta.setBasePotionData(new PotionData(PotionType.STRENGTH));
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         friendlyFire.setItemMeta(potionMeta);
 
 

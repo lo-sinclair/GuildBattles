@@ -5,6 +5,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -40,6 +41,7 @@ public abstract class PeginateMenu extends Menu {
         patterns.add(new Pattern(DyeColor.GRAY, PatternType.BORDER));
         assert meta != null;
         ((BannerMeta) meta).setPatterns(patterns);
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         left.setItemMeta(meta);
 
         ItemStack right = new ItemStack(Material.WHITE_BANNER, 1);
@@ -52,6 +54,7 @@ public abstract class PeginateMenu extends Menu {
         patterns.add(new Pattern(DyeColor.GRAY, PatternType.BORDER));
         assert meta != null;
         ((BannerMeta) meta).setPatterns(patterns);
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         right.setItemMeta(meta);
 
         ItemStack close = new ItemStack(Material.BARRIER, 1);
