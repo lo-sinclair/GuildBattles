@@ -75,8 +75,8 @@ public class PrivatManager {
         }
 
         if(guild.getTerritory().equals("+")) {
-            if(!EconomyManager.takeMoney(p, 50)) {
-                p.sendMessage(Messages.getPrefix() + ChatColor.RED + "У вас недостаточно средств на счете!");
+            if(!pl.getGuildManager().takeGuildMoney(guild, 50.0)) {
+                p.sendMessage(Messages.getPrefix() + ChatColor.RED + "На счету гильдии недостаточно монет!");
                 return false;
             }
         }

@@ -210,6 +210,16 @@ public class GuildManager {
     }
 
 
+    public boolean takeGuildMoney(Guild g, Double sum) {
+        if(g.getBalance() < sum ) {
+            return false;
+        }
+        g.setBalance(g.getBalance() - sum);
+        pl.getDb().updateGuild(g);
+        pl.updateAllPlayerMenuUsage();
+        return true;
+    }
+
 
     private class takeMoneyPrompt extends NumericPrompt {
 
@@ -231,8 +241,7 @@ public class GuildManager {
             g.setBalance(g.getBalance() + number.doubleValue());
             pl.getDb().updateGuild(g);
             pl.updateAllPlayerMenuUsage();
-            System.out.println(g.getBalance());
-            context.getForWhom().sendRawMessage(Messages.getPrefix() + "Гильдия " + g.getName() + " благодарит вас за перевод!");
+            context.getForWhom().sendRawMessage(Messages.getPrefix() + "Гильдия " + ChatColor.BLUE + g.getName() + ChatColor.RESET + " благодарит вас за перевод!");
             return END_OF_CONVERSATION;
         }
     }
