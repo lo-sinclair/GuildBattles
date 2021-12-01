@@ -5,6 +5,7 @@ import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.cmd.ISubCommand;
 import locb.both.guildbattles.model.Guild;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -50,7 +51,14 @@ public class MoneyCommand implements ISubCommand {
 
             try {
                 double sum = Double.parseDouble(args[2]);
-                GuildBattles.getInstance().getGuildManager().sendMoneyToOther(ps, g, sum);
+                if(GuildBattles.getInstance().getGuildManager().sendMoneyToOther(ps, g, sum)) {
+                    ps.sendMessage(Messages.getPrefix() + "Гильдия " + ChatColor.BLUE + g.getName() + ChatColor.RESET + " благодарит вас за перевод монет!");
+                    Player pt = Bukkit.getPlayer(g.getLeader().getName());
+                    if(pt != null) {
+                        pt.sendMessage(Messages.getPrefix() + ChatColor.BLUE + pt.getName() + " отправил на счет вашей гильдии " + sum + " монет!");
+                    }
+                }
+
                 return true;
             } catch(NumberFormatException e){
                 ps.sendMessage(Messages.getPrefix() + ChatColor.RED + "Сумма монет должна быть числом");

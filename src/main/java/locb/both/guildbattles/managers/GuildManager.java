@@ -123,7 +123,7 @@ public class GuildManager {
     }
 
     public void sendMoneyToOtherAction(Player ps) {
-        ps.sendMessage("Используйте команду: " + ChatColor.GREEN + "/guild money send [Название_гильдии] + [сумма]");
+        ps.sendMessage("Используйте команду:\n" + ChatColor.GREEN + "/guild money send [Название_гильдии] + [сумма]");
         TextComponent msg = GuiToolKit.suggestCommand(ps, "Отправить монеты", "/guild money send");
         ps.spigot().sendMessage(msg);
     }
@@ -270,7 +270,7 @@ public class GuildManager {
             pl.getDb().removeMember(p.getName());
             p.sendMessage(Messages.getPrefix() + "Вы покинули гильдию!");
         }
-        if(pl.getRankManager().playerRank(p).equals(Rank.LEADER)) {
+        else if(pl.getRankManager().playerRank(p).equals(Rank.LEADER)) {
             Member member = pl.getDb().findMemberByName(p.getName());
             pl.getDb().removeGuild(member.getGuildId());
             p.sendMessage(Messages.getPrefix() + "Ваша гильдия прекратила существование :(");
@@ -300,8 +300,9 @@ public class GuildManager {
             ps.sendMessage(Messages.getPrefix() + ChatColor.RED + "На счету вашей гильдии недостаточно средств!");
         }
         g2.setBalance(g2.getBalance() + sum);
-        pl.getDb().updateGuild(g1);
+        pl.getDb().updateGuild(g2);
         pl.updateAllPlayerMenuUsage();
+
         return true;
     }
 

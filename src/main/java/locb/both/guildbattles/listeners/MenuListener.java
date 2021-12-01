@@ -21,8 +21,6 @@ public class MenuListener implements Listener {
         if (holder instanceof Menu) {
             e.setCancelled(true);
 
-
-
             Menu menu = (Menu) holder;
             menu.handleMenu(e);
         }
