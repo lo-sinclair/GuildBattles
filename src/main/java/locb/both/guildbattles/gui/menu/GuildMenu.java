@@ -8,6 +8,7 @@ import locb.both.guildbattles.gui.PlayerMenuUsage;
 import locb.both.guildbattles.managers.GuildManager;
 import locb.both.guildbattles.model.Guild;
 import locb.both.guildbattles.model.Member;
+import locb.both.guildbattles.workers.TeleportWorker;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -38,14 +39,14 @@ public class GuildMenu extends Menu {
         itemPermitions.put(Material.BOOK, Rank.MEMBER);
         itemPermitions.put(Material.BEACON, Rank.LEADER);
         itemPermitions.put(Material.CHEST, Rank.MEMBER);
-        itemPermitions.put(Material.RED_BED, Rank.MEMBER);
+        itemPermitions.put(Material.RED_BED, Rank.LEADER);
         itemPermitions.put(Material.IRON_SWORD, Rank.MEMBER);
         itemPermitions.put(Material.WOODEN_AXE, Rank.LEADER);
         itemPermitions.put(Material.GOLD_INGOT, Rank.MEMBER);
         itemPermitions.put(Material.LIME_DYE, Rank.TRUSTED);
-        itemPermitions.put(Material.NETHER_STAR, Rank.MEMBER);
-        itemPermitions.put(Material.DIAMOND, Rank.MEMBER);
-        itemPermitions.put(Material.TIPPED_ARROW, Rank.MEMBER);
+        itemPermitions.put(Material.NETHER_STAR, Rank.LEADER);
+        itemPermitions.put(Material.DIAMOND, Rank.LEADER);
+        itemPermitions.put(Material.TIPPED_ARROW, Rank.LEADER);
         itemPermitions.put(Material.BARRIER, Rank.MEMBER);
     }
 
@@ -81,14 +82,36 @@ public class GuildMenu extends Menu {
                     new PrivatMenu(playerMenuUsage).open();
                     break;
 
+                case RED_BED:
+                    if(e.isLeftClick()) {
+                        TeleportWorker tpw = new TeleportWorker((Player) e.getWhoClicked());
+                        tpw.tpHome(2);
+                        e.getWhoClicked().closeInventory();
+                    }
+                    if(e.isRightClick()) {
+                        if(playerMenuUsage.getGuild().getHome().isEmpty()) {
+                            manager.setHomeAction((Player) e.getWhoClicked());
+                        }
+                        else{
+                            manager.removeHomeAction((Player) e.getWhoClicked());
+                        }
+                        e.getWhoClicked().closeInventory();
+                    }
+                    break;
+
                 case GOLD_INGOT:
                     if(e.isLeftClick()) {
                         manager.sendMoneyToGuild((Player) e.getWhoClicked());
                         e.getWhoClicked().closeInventory();
                     }
                     if(e.isRightClick()) {
-
-                        e.getWhoClicked().closeInventory();
+                        if(getOwnerRank().equals(Rank.LEADER)) {
+                            manager.sendMoneyToOtherAction((Player)e.getWhoClicked());
+                            e.getWhoClicked().closeInventory();
+                        }
+                        else {
+                            e.getWhoClicked().sendMessage(Messages.getPrefix() + ChatColor.RED + "У вас нет прав на эту команду!");
+                        }
                     }
                     break;
 
@@ -126,6 +149,7 @@ public class GuildMenu extends Menu {
         meta.setLore(lore);
         guild.setItemMeta(meta);
 
+
         // Книга
         ItemStack members_list = new ItemStack(Material.BOOK, 1);
         meta = members_list.getItemMeta();
@@ -158,7 +182,14 @@ public class GuildMenu extends Menu {
         meta = house.getItemMeta();
         meta.setDisplayName(Messages.getNotice("messages.menu.guild.house.title"));
         lore = new ArrayList<>();
-        lore.add(Messages.getNotice("messages.menu.guild.house.description1"));
+        lore.add("ЛКМ: Телепортироваться в дом гильдии");
+        if(playerMenuUsage.getGuild().getHome().isEmpty()) {
+            lore.add("ПКМ: Установить точку дома гильдии");
+            lore.add("     Стоимость: 20 монет ");
+        }
+        else {
+            lore.add("ПКМ: Удалить точку дома гильдии");
+        }
         meta.setLore(lore);
         house.setItemMeta(meta);
 
@@ -189,9 +220,11 @@ public class GuildMenu extends Menu {
         lore = new ArrayList<>();
         lore.add("Баланс: " + Double.toString(g.getBalance()) );
         lore.add("ЛКМ: Пополнить казну");
+
         if(getOwnerRank().equals(Rank.LEADER)) {
             lore.add("ПКМ: Перевод монет на другую гильдию");
         }
+
         meta.setLore(lore);
         treasury.setItemMeta(meta);
 
@@ -232,6 +265,13 @@ public class GuildMenu extends Menu {
         potionMeta.setDisplayName(Messages.getNotice("messages.menu.guild.friendlyFire.title"));
         potionMeta.setBasePotionData(new PotionData(PotionType.STRENGTH));
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+        meta.addItemFlags(ItemFlag.HIDE_DYE);
+        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+
         friendlyFire.setItemMeta(potionMeta);
 
 

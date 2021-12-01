@@ -1,15 +1,15 @@
 package locb.both.guildbattles.cmd.subs;
 
+import locb.both.guildbattles.GuildBattles;
+import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.cmd.ISubCommand;
-import locb.both.guildbattles.workers.TeleportWorker;
+import locb.both.guildbattles.model.Guild;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class TeleportCommand implements ISubCommand {
-
-
+public class MoneyCommand implements ISubCommand {
     @Override
     public String getName() {
         return null;
@@ -33,24 +33,32 @@ public class TeleportCommand implements ISubCommand {
             return false;
         }
 
-        if (args.length < 2) {
+        if (args.length < 3) {
             commandSender.sendMessage(ChatColor.RED + "Не хватает аргументов!");
             return true;
         }
 
         Player ps = (Player) commandSender;
 
-        if (args[0].equals("members")) {
-            if (args[1].equals("accept")) {
+        if (args[0].equals("send")) {
+            Guild g = pl.getDb().findGuildByName(args[1]);
+            System.out.println(args[1]);
+            if(g == null ) {
+                ps.sendMessage(Messages.getPrefix() + ChatColor.RED + "Такой гильдии не существует");
+                return true;
+            }
 
-                TeleportWorker tpw = new TeleportWorker(ps);
-                tpw.tpGuildtoLeader(15);
+            try {
+                double sum = Double.parseDouble(args[2]);
+                GuildBattles.getInstance().getGuildManager().sendMoneyToOther(ps, g, sum);
+                return true;
+            } catch(NumberFormatException e){
+                ps.sendMessage(Messages.getPrefix() + ChatColor.RED + "Сумма монет должна быть числом");
                 return true;
             }
-            if (args[1].equals("deny")) {
-                return true;
-            }
+
         }
+
 
         return false;
     }

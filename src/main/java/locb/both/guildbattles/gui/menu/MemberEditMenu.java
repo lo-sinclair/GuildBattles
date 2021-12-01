@@ -70,7 +70,7 @@ public class MemberEditMenu extends Menu {
     public void handleMenu(InventoryClickEvent e) {
         if( getOwnerRank().getLevel() <= itemPermitions.get( e.getCurrentItem().getType() ).getLevel() ) {
             switch (e.getCurrentItem().getType()) {
-                case GOLDEN_HELMET:
+                case DIAMOND_HELMET:
                     gManager.makeTrustedAction(playerMenuUsage.getOwner(), playerMenuUsage.getTarget());
                     e.getWhoClicked().closeInventory();
                     break;
@@ -80,7 +80,7 @@ public class MemberEditMenu extends Menu {
                     e.getWhoClicked().closeInventory();
                     break;
 
-                case DIAMOND_HELMET:
+                case GOLDEN_HELMET:
                     gManager.giveLeaderAction(playerMenuUsage.getOwner(), playerMenuUsage.getTarget());
                     e.getWhoClicked().closeInventory();
                     break;
@@ -117,7 +117,7 @@ public class MemberEditMenu extends Menu {
         ItemStack signRank = new ItemStack(Material.POPPY, 1);
         if(getTargetRank().equals(Rank.MEMBER)) {
             // Золотой шлем
-            signRank = new ItemStack(Material.GOLDEN_HELMET, 1);
+            signRank = new ItemStack(Material.DIAMOND_HELMET, 1);
             meta = signRank.getItemMeta();
             meta.setDisplayName("Сделать заместителем");
             lore = new ArrayList<>();
@@ -137,7 +137,7 @@ public class MemberEditMenu extends Menu {
             signRank.setItemMeta(meta);
         }
 
-        ItemStack assignLeader = new ItemStack(Material.DIAMOND_HELMET, 1);
+        ItemStack assignLeader = new ItemStack(Material.GOLDEN_HELMET, 1);
         meta = assignLeader.getItemMeta();
         meta.setDisplayName("Передать главу");
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

@@ -21,10 +21,10 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-public class PrivatManager {
+public class TerritoryManager {
     GuildBattles pl;
 
-    public PrivatManager(){
+    public TerritoryManager(){
         pl = GuildBattles.getInstance();
     }
 
@@ -185,8 +185,13 @@ public class PrivatManager {
     }
 
 
-    private String locationToString(Location loc ){
+    public static String locationToString(Location loc ){
         return loc.getWorld().getName() + "_" + loc.getBlockX() + "_" + loc.getBlockY() + "_" + loc.getBlockZ();
+    }
+
+    public static Location stringToLocation(String strLoc) {
+        String[] parts = strLoc.split("_");
+        return new Location(Bukkit.getWorld(parts[0]), Double.parseDouble(parts[1]), Double.parseDouble(parts[2]), Double.parseDouble(parts[3]));
     }
 
 }

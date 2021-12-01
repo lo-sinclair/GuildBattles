@@ -48,7 +48,7 @@ public class MembersMenu extends Menu {
     public void handleMenu(InventoryClickEvent e) {
         if( getOwnerRank().getLevel() <= itemPermitions.get( e.getCurrentItem().getType() ).getLevel() ) {
             switch (e.getCurrentItem().getType()) {
-                case GOLDEN_HELMET:
+                case DIAMOND_HELMET:
                     new MembersListMenu(playerMenuUsage, Rank.TRUSTED).open();
                     break;
 
@@ -70,8 +70,9 @@ public class MembersMenu extends Menu {
         ItemMeta meta;
         ArrayList<String> lore;
 
-        // Алмазный шлем
-        ItemStack leader = new ItemStack(Material.DIAMOND_HELMET, 1);
+
+        // Золотой шлем
+        ItemStack leader = new ItemStack(Material.GOLDEN_HELMET, 1);
         Guild g = playerMenuUsage.getGuild();
         meta = leader.getItemMeta();
         meta.setDisplayName("Глава");
@@ -83,8 +84,8 @@ public class MembersMenu extends Menu {
         leader.setItemMeta(meta);
 
 
-        // Золотой шлем
-        ItemStack trusted = new ItemStack(Material.GOLDEN_HELMET, 1);
+        // Алмазный шлем
+        ItemStack trusted = new ItemStack(Material.DIAMOND_HELMET, 1);
         meta = trusted.getItemMeta();
         meta.setDisplayName("Список заместителей");
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

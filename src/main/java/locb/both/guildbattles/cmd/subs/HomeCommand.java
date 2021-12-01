@@ -1,15 +1,13 @@
 package locb.both.guildbattles.cmd.subs;
 
+import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.cmd.ISubCommand;
-import locb.both.guildbattles.workers.TeleportWorker;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class TeleportCommand implements ISubCommand {
-
-
+public class HomeCommand implements ISubCommand {
     @Override
     public String getName() {
         return null;
@@ -30,7 +28,7 @@ public class TeleportCommand implements ISubCommand {
         // Права на команду
         if( !pl.getRankManager().playerHasPerms((Player)commandSender, Rank.LEADER)  ) {
             commandSender.sendMessage(ChatColor.RED + "Вы не можете использовать эту команду.");
-            return false;
+            return true;
         }
 
         if (args.length < 2) {
@@ -40,13 +38,25 @@ public class TeleportCommand implements ISubCommand {
 
         Player ps = (Player) commandSender;
 
-        if (args[0].equals("members")) {
+        if(args[0].equals("set")) {
             if (args[1].equals("accept")) {
+                if(pl.getGuildManager().setHomeLocation(ps)) {
+                    ps.sendMessage(Messages.getPrefix() + ChatColor.GREEN + "Точка дома установлена!");
+                }
+            }
 
-                TeleportWorker tpw = new TeleportWorker(ps);
-                tpw.tpGuildtoLeader(15);
+            if (args[1].equals("deny")) {
                 return true;
             }
+        }
+
+        if(args[0].equals("remove")) {
+            if (args[1].equals("accept")) {
+                if(pl.getGuildManager().removeHomeLocation(ps)) {
+                    ps.sendMessage(Messages.getPrefix() + ChatColor.GREEN + "Точка дома удалена!");
+                }
+            }
+
             if (args[1].equals("deny")) {
                 return true;
             }

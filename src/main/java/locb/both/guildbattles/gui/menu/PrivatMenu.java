@@ -3,7 +3,7 @@ package locb.both.guildbattles.gui.menu;
 import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.gui.Menu;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
-import locb.both.guildbattles.managers.PrivatManager;
+import locb.both.guildbattles.managers.TerritoryManager;
 import locb.both.guildbattles.model.Guild;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -22,12 +22,12 @@ import java.util.List;
 
 public class PrivatMenu extends Menu {
 
-    PrivatManager pManager;
+    TerritoryManager pManager;
 
     public PrivatMenu(PlayerMenuUsage playerMenuUsage) {
         super(playerMenuUsage);
 
-        pManager = new PrivatManager();
+        pManager = new TerritoryManager();
 
         //временное решение для хранения прав
         itemPermitions.put(Material.LANTERN, Rank.LEADER);

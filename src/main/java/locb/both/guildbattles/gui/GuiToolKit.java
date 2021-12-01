@@ -39,19 +39,33 @@ public class GuiToolKit {
     }
 
 
-    public static TextComponent confirmMessage(Player sender, String text, String acceptCommand, String denyCommand) {
+    public static TextComponent confirmMessage(Player ps, String text, String acceptCommand, String denyCommand) {
 
         TextComponent msg = new TextComponent(Messages.getPrefix() + text + "\n");
-        TextComponent c1 = new TextComponent(ChatColor.BOLD + "" + ChatColor.GREEN + "[Да] ");
+        TextComponent c1 = new TextComponent( ChatColor.GREEN + "" + ChatColor.BOLD + "[ Да ] ");
         c1.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, acceptCommand));
 
-        TextComponent c2 = new TextComponent(ChatColor.BOLD + "" + ChatColor.RED + "[Отмена] ");
+        TextComponent c2 = new TextComponent( ChatColor.RED + "" + ChatColor.BOLD + "[Отмена] ");
         c2.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, denyCommand));
+
 
         msg.addExtra(c1);
         msg.addExtra(c2);
 
         return msg;
+    }
+
+
+    public static TextComponent suggestCommand(Player ps, String text, String command) {
+        TextComponent msg = new TextComponent();
+
+        TextComponent c = new TextComponent( ChatColor.GREEN + "" + ChatColor.BOLD + "[ " + text + " ]");
+        c.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command));
+
+        msg.addExtra(c);
+
+        return msg;
+
     }
 
 

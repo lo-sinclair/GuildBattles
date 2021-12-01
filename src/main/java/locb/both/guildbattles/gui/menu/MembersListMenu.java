@@ -62,14 +62,9 @@ public class MembersListMenu extends PeginateMenu {
 
             PlayerMenuUsage playerMenuUsage = GuildBattles.getPlayerMenuUsage((Player) e.getWhoClicked());
 
-
-
             String uuid_str = e.getCurrentItem().getItemMeta().getPersistentDataContainer().get(new NamespacedKey(GuildBattles.getInstance(), "uuid"), PersistentDataType.STRING);
             OfflinePlayer target = Bukkit.getOfflinePlayer(UUID.fromString(uuid_str));
             playerMenuUsage.setTarget(target);
-
-
-
 
             new MemberEditMenu(playerMenuUsage, role).open();
 

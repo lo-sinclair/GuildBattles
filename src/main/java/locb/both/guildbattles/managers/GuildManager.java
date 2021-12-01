@@ -11,10 +11,7 @@ import locb.both.guildbattles.model.Member;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.conversations.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -32,7 +29,6 @@ public class GuildManager {
     }
 
     public void createGuildAction(Player p){
-
 
         if(!EconomyManager.takeMoney(p, 10)) {
             p.sendMessage(ChatColor.RED + "У вас недостаточно средств на счете!");
@@ -90,10 +86,83 @@ public class GuildManager {
     }
 
     public void kickMemberAction(Player sender, OfflinePlayer target){
+
         TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены, что хотите выгнать " + target.getName() + "из гильдии?",
                 "/guild kick " + target.getName() + " accept", "/guild kick " + target.getName() + " deny");
         sender.spigot().sendMessage(msg);
     }
+
+
+    public void setHomeAction(Player ps){
+        Guild guild = pl.getDb().findGuildByMember(ps.getName());
+
+        if( ! (guild.getHome().isEmpty() ) ) {
+            ps.sendMessage(Messages.getPrefix() + ChatColor.RED + "У вашей гильдии уже есть дом.");
+            return;
+        }
+        if(!pl.getGuildManager().takeGuildMoney(guild, 50.0)) {
+            ps.sendMessage(Messages.getPrefix() + ChatColor.RED + "На счету гильдии недостаточно монет!");
+            return;
+        }
+        TextComponent msg = GuiToolKit.confirmMessage(ps, "Установить точку дома в этом месте?",
+                "/guild home set accept", "/guild home set deny");
+        ps.spigot().sendMessage(msg);
+    }
+
+
+    public void removeHomeAction(Player ps){
+        Guild guild = pl.getDb().findGuildByMember(ps.getName());
+        if( (guild.getHome().isEmpty() ) ) {
+            ps.sendMessage(Messages.getPrefix() + ChatColor.RED + "У вашей гильдии нет дома.");
+            return;
+        }
+
+        TextComponent msg = GuiToolKit.confirmMessage(ps, "Вы действительно хотите удалить точку дома гильдии?",
+                "/guild home remove accept", "/guild home remove deny");
+        ps.spigot().sendMessage(msg);
+    }
+
+    public void sendMoneyToOtherAction(Player ps) {
+        ps.sendMessage("Используйте команду: " + ChatColor.GREEN + "/guild money send [Название_гильдии] + [сумма]");
+        TextComponent msg = GuiToolKit.suggestCommand(ps, "Отправить монеты", "/guild money send");
+        ps.spigot().sendMessage(msg);
+    }
+
+
+    public boolean setHomeLocation(Player p) {
+        Guild guild = pl.getDb().findGuildByMember(p.getName());
+
+        if(guild == null){
+            return false;
+        }
+
+        Location loc = p.getLocation();
+        String loc_str = TerritoryManager.locationToString(loc);
+
+        guild.setHome(loc_str);
+        pl.getDb().updateGuild(guild);
+        pl.updateAllPlayerMenuUsage();
+
+        return true;
+    }
+
+
+
+    public boolean removeHomeLocation(Player p) {
+        Guild guild = pl.getDb().findGuildByMember(p.getName());
+
+        if(guild == null){
+            return false;
+        }
+
+        guild.setHome("");
+        pl.getDb().updateGuild(guild);
+        pl.updateAllPlayerMenuUsage();
+
+        return false;
+    }
+
+
 
     public void sendMoneyToGuild(Player ps){
 
@@ -221,6 +290,22 @@ public class GuildManager {
     }
 
 
+    public boolean sendMoneyToOther(Player ps, Guild g2, double sum){
+        Guild g1 = pl.getDb().findGuildByMember(ps.getName());
+        if(g1 == null) {
+            return false;
+        }
+
+        if(!takeGuildMoney(g1, sum)) {
+            ps.sendMessage(Messages.getPrefix() + ChatColor.RED + "На счету вашей гильдии недостаточно средств!");
+        }
+        g2.setBalance(g2.getBalance() + sum);
+        pl.getDb().updateGuild(g1);
+        pl.updateAllPlayerMenuUsage();
+        return true;
+    }
+
+
     private class takeMoneyPrompt extends NumericPrompt {
 
         @Override
@@ -233,7 +318,7 @@ public class GuildManager {
 
             Player p = (Player)context.getForWhom();
             if(!EconomyManager.takeMoney(p, number.doubleValue())) {
-                p.sendMessage(Messages.getPrefix() + ChatColor.RED + "У вас недостаточно средств на счете!");
+                context.getForWhom().sendRawMessage(Messages.getPrefix() + ChatColor.RED + "У вас недостаточно средств на счете!");
                 return END_OF_CONVERSATION;
             }
 

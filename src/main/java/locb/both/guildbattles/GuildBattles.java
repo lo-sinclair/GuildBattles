@@ -28,7 +28,7 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
     //managers
     private RankManager rankManager;
     private GuildManager guildManager;
-    private PrivatManager privatManager;
+    private TerritoryManager territoryManager;
     private TeleportManager teleportManager;
 
 
@@ -67,7 +67,7 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
         EconomyManager.init();
         this.guildManager = new GuildManager();
         this.rankManager = new RankManager();
-        this.privatManager = new PrivatManager();
+        this.territoryManager = new TerritoryManager();
         this.teleportManager = new TeleportManager();
 
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
@@ -125,8 +125,8 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
     public RankManager getRankManager() {
         return rankManager;
     }
-    public PrivatManager getPrivatManager() {
-        return privatManager;
+    public TerritoryManager getPrivatManager() {
+        return territoryManager;
     }
     public TeleportManager getTeleportManager() {return teleportManager;}
 

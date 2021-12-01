@@ -517,7 +517,7 @@ public class SQLDatabase {
             Connection conn = getConnection();
             Statement stmt = conn.createStatement();
 
-            String q = "SELECT * FROM gb_guilds WHERE `id` = '%s';";
+            String q = "SELECT * FROM gb_guilds WHERE `name` = '%s';";
 
             ResultSet result = stmt.executeQuery(String.format(q, name));
 
