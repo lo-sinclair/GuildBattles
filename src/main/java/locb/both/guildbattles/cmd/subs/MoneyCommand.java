@@ -55,7 +55,9 @@ public class MoneyCommand implements ISubCommand {
                     ps.sendMessage(Messages.getPrefix() + "Гильдия " + ChatColor.BLUE + g.getName() + ChatColor.RESET + " благодарит вас за перевод монет!");
                     Player pt = Bukkit.getPlayer(g.getLeader().getName());
                     if(pt != null) {
-                        pt.sendMessage(Messages.getPrefix() + ChatColor.BLUE + pt.getName() + " отправил на счет вашей гильдии " + sum + " монет!");
+                        pt.sendMessage(Messages.getPrefix() + "Ваша гильдия получает " + sum + " монет от гильдии " +
+                                ChatColor.BLUE + g.getName() + ChatColor.RESET + "!");
+
                     }
                 }
 

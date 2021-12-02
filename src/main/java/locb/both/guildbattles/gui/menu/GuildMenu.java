@@ -115,6 +115,17 @@ public class GuildMenu extends Menu {
                     }
                     break;
 
+                case TIPPED_ARROW:
+                    System.out.println(playerMenuUsage.getGuild().isAllowFriendlyFire());
+                    if(playerMenuUsage.getGuild().isAllowFriendlyFire()) {
+                        manager.friendlyFireOffAction((Player) e.getWhoClicked());
+                    }
+                    else {
+                        manager.friendlyFireOnAction((Player) e.getWhoClicked());
+                    }
+                    e.getWhoClicked().closeInventory();
+                    break;
+
                 case BARRIER:
                     e.getWhoClicked().closeInventory();
                     manager.leaveGuildAction(playerMenuUsage.getOwner());

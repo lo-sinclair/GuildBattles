@@ -5,6 +5,7 @@ import locb.both.guildbattles.cooldowns.TimeCooldown;
 import locb.both.guildbattles.data.SQLDatabase;
 import locb.both.guildbattles.data.YAML;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
+import locb.both.guildbattles.listeners.DamageListener;
 import locb.both.guildbattles.listeners.MenuListener;
 import locb.both.guildbattles.managers.*;
 import org.bukkit.Bukkit;
@@ -71,6 +72,7 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
         this.teleportManager = new TeleportManager();
 
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DamageListener(this), this);
 
         getCommand("guild").setExecutor(new GuildCommand(this));
 

@@ -13,7 +13,6 @@ public enum Rank {
         this.name = name;
     }
 
-
     public String getName() {
         return name;
     }

@@ -35,6 +35,7 @@ public class GuildCommand implements CommandExecutor {
         subCommands.put("teleport", new TeleportCommand());
         subCommands.put("home", new HomeCommand());
         subCommands.put("money", new MoneyCommand());
+        subCommands.put("friendlyFire", new FriendlyFireCommand());
     }
 
     @Override

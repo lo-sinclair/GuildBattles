@@ -80,9 +80,6 @@ public class PrivatCommand implements ISubCommand {
             e.printStackTrace();
         }
 
-
-
-
         return false;
     }
 }

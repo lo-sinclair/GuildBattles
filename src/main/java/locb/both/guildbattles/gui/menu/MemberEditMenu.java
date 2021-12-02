@@ -125,7 +125,7 @@ public class MemberEditMenu extends Menu {
             lore.add("Может выгнать игрока");
             lore.add("Может установить алтарь и строить в битве гильдий");
             meta.setLore(lore);
-            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             signRank.setItemMeta(meta);
         }
         if(getTargetRank().equals(Rank.TRUSTED)) {

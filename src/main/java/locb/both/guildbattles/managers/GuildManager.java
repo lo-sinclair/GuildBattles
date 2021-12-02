@@ -92,6 +92,20 @@ public class GuildManager {
         sender.spigot().sendMessage(msg);
     }
 
+    public void friendlyFireOnAction(Player sender){
+        TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены, что хотите "
+                        + ChatColor.BOLD + "включить" + ChatColor.RESET + " опцию \"Огонь по своим\"?",
+                "/guild friendlyFire on accept", "/guild friendlyFire on deny");
+        sender.spigot().sendMessage(msg);
+    }
+
+    public void friendlyFireOffAction(Player sender){
+        TextComponent msg = GuiToolKit.confirmMessage(sender, "Вы уверены, что хотите "
+                        + ChatColor.BOLD + "отключить" + ChatColor.RESET + " опцию \"Огонь по своим\"?",
+                "/guild friendlyFire off accept", "/guild friendlyFire off deny");
+        sender.spigot().sendMessage(msg);
+    }
+
 
     public void setHomeAction(Player ps){
         Guild guild = pl.getDb().findGuildByMember(ps.getName());
@@ -203,6 +217,20 @@ public class GuildManager {
     }
 
 
+    public boolean setFriendlyFire(Player p, boolean status) {
+        Guild guild = pl.getDb().findGuildByMember(p.getName());
+
+        if (guild == null) return false;
+
+        guild.setAllowFriendlyFire(status);
+
+        pl.getDb().updateGuild(guild);
+        pl.updateAllPlayerMenuUsage();
+
+        return true;
+    }
+
+
     public boolean makeRank(OfflinePlayer pt, Rank rank) {
         Member member = pl.getDb().findMemberByUUID(pt.getUniqueId().toString());
         if(member != null) {
@@ -254,7 +282,7 @@ public class GuildManager {
 
     private void createNewGuild(String guild_name, Player p) {
         long ts_naw = System.currentTimeMillis();
-        Guild guild = new Guild(0, guild_name, ts_naw, 0.0, false, "", "");
+        Guild guild = new Guild(0, guild_name, ts_naw, 0.0, true, "", "");
 
         int guild_id = pl.getDb().createGuild(guild);
 

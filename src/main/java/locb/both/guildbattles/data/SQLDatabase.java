@@ -59,7 +59,7 @@ public class SQLDatabase {
                 + "`name` VARCHAR(30) NOT NULL,"
                 + "`create_date` TIMESTAMP NOT NULL,"
                 + "`balance` DOUBLE(64, 2) DEFAULT 0.0,"
-                + "`allow_friendly_fire` TINYINT(1) DEFAULT 0,"
+                + "`allow_friendly_fire` TINYINT(1) DEFAULT 1,"
                 + "`territory` VARCHAR(100) DEFAULT '',"
                 + "`home` VARCHAR(100) DEFAULT '',"
                 + " UNIQUE (`name`));";
