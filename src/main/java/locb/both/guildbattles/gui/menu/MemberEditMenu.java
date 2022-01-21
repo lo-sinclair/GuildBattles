@@ -106,6 +106,9 @@ public class MemberEditMenu extends Menu {
 
             }
         }
+        else {
+            e.getWhoClicked().sendMessage(Messages.getPrefix() + ChatColor.RED + "У вас недостаточно высокий ранг, чтобы использовать эту команду!");
+        }
     }
 
 

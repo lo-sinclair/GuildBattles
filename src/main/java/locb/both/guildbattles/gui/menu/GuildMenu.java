@@ -39,8 +39,8 @@ public class GuildMenu extends Menu {
         itemPermitions.put(Material.BOOK, Rank.MEMBER);
         itemPermitions.put(Material.BEACON, Rank.LEADER);
         itemPermitions.put(Material.CHEST, Rank.MEMBER);
-        itemPermitions.put(Material.RED_BED, Rank.LEADER);
-        itemPermitions.put(Material.IRON_SWORD, Rank.MEMBER);
+        itemPermitions.put(Material.RED_BED, Rank.MEMBER);
+        itemPermitions.put(Material.IRON_SWORD, Rank.LEADER);
         itemPermitions.put(Material.WOODEN_AXE, Rank.LEADER);
         itemPermitions.put(Material.GOLD_INGOT, Rank.MEMBER);
         itemPermitions.put(Material.LIME_DYE, Rank.TRUSTED);
@@ -82,20 +82,28 @@ public class GuildMenu extends Menu {
                     new PrivatMenu(playerMenuUsage).open();
                     break;
 
+                case IRON_SWORD:
+                    new BattleMenu(playerMenuUsage).open();
+                    break;
+
                 case RED_BED:
                     if(e.isLeftClick()) {
                         TeleportWorker tpw = new TeleportWorker((Player) e.getWhoClicked());
-                        tpw.tpHome(2);
+                        tpw.tpHome(15);
                         e.getWhoClicked().closeInventory();
                     }
                     if(e.isRightClick()) {
-                        if(playerMenuUsage.getGuild().getHome().isEmpty()) {
-                            manager.setHomeAction((Player) e.getWhoClicked());
+                        if(getOwnerRank().equals(Rank.LEADER)) {
+                            if (playerMenuUsage.getGuild().getHome().isEmpty()) {
+                                manager.setHomeAction((Player) e.getWhoClicked());
+                            } else {
+                                manager.removeHomeAction((Player) e.getWhoClicked());
+                            }
+                            e.getWhoClicked().closeInventory();
                         }
-                        else{
-                            manager.removeHomeAction((Player) e.getWhoClicked());
+                        else {
+                            e.getWhoClicked().sendMessage(Messages.getPrefix() + ChatColor.RED + "Только глава гильдии может устанавливать точку дома!");
                         }
-                        e.getWhoClicked().closeInventory();
                     }
                     break;
 
@@ -131,6 +139,9 @@ public class GuildMenu extends Menu {
                     manager.leaveGuildAction(playerMenuUsage.getOwner());
                     break;
             }
+        }
+        else {
+            e.getWhoClicked().sendMessage(Messages.getPrefix() + ChatColor.RED + "У вас недостаточно высокий ранг, чтобы использовать эту команду!");
         }
     }
 
@@ -244,12 +255,6 @@ public class GuildMenu extends Menu {
         ItemStack invite = new ItemStack(Material.LIME_DYE, 1);
         meta = invite.getItemMeta();
         meta.setDisplayName(Messages.getNotice("messages.menu.guild.invite.title"));
-
-        if( getOwnerRank().getLevel() > itemPermitions.get(Material.LIME_DYE).getLevel()) {
-            lore = new ArrayList<>();
-            lore.add(ChatColor.RED + "Недостаточно прав для использования");
-            meta.setLore(lore);
-        }
         invite.setItemMeta(meta);
 
 
@@ -275,13 +280,8 @@ public class GuildMenu extends Menu {
         PotionMeta potionMeta = (PotionMeta) friendlyFire.getItemMeta();
         potionMeta.setDisplayName(Messages.getNotice("messages.menu.guild.friendlyFire.title"));
         potionMeta.setBasePotionData(new PotionData(PotionType.STRENGTH));
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-        meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-        meta.addItemFlags(ItemFlag.HIDE_DYE);
-        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        //potionMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        potionMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 
         friendlyFire.setItemMeta(potionMeta);
 

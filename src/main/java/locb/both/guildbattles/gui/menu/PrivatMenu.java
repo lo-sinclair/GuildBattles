@@ -1,5 +1,6 @@
 package locb.both.guildbattles.gui.menu;
 
+import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.gui.Menu;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
@@ -64,6 +65,9 @@ public class PrivatMenu extends Menu {
                     new GuildMenu(playerMenuUsage).open();
                     break;
             }
+        }
+        else {
+            e.getWhoClicked().sendMessage(Messages.getPrefix() + ChatColor.RED + "У вас недостаточно высокий ранг, чтобы использовать эту команду!");
         }
     }
 

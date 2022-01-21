@@ -73,7 +73,10 @@
                         </goals>
                         <configuration>
                             <executable>/bin/sh</executable>
-                            <arguments><argument>${basedir}/deploy.sh</argument></arguments>
+                            <arguments>
+                                <argument>${basedir}/deploy.sh</argument>
+                                <argument>${project.artifactId}-${project.version}.jar</argument>
+                            </arguments>
                         </configuration>
                     </execution>
                 </executions>

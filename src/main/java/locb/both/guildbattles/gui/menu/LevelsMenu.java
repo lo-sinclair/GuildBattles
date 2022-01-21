@@ -4,7 +4,6 @@ import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.gui.Menu;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
-import locb.both.guildbattles.managers.GuildManager;
 import locb.both.guildbattles.model.Guild;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -20,24 +19,21 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MembersMenu extends Menu {
-    private GuildManager manager;
-
-    public MembersMenu(PlayerMenuUsage playerMenuUsage) {
+public class LevelsMenu extends Menu {
+    public LevelsMenu(PlayerMenuUsage playerMenuUsage) {
         super(playerMenuUsage);
 
-        manager = new GuildManager();
-
         //временное решение для хранения прав
-        itemPermitions.put(Material.DIAMOND_HELMET, Rank.MEMBER);
-        itemPermitions.put(Material.GOLDEN_HELMET, Rank.MEMBER);
-        itemPermitions.put(Material.IRON_HELMET, Rank.MEMBER);
+        itemPermitions.put(Material.LIGHT_BLUE_BANNER, Rank.LEADER);
+        itemPermitions.put(Material.YELLOW_BANNER, Rank.LEADER);
+        itemPermitions.put(Material.GREEN_BANNER, Rank.LEADER);
+        itemPermitions.put(Material.RED_BANNER, Rank.LEADER);
         itemPermitions.put(Material.WHITE_BANNER, Rank.MEMBER);
     }
 
     @Override
     public String getMenuName() {
-        return "Список участников";
+        return "Уровни битвы";
     }
 
     @Override
@@ -49,18 +45,25 @@ public class MembersMenu extends Menu {
     public void handleMenu(InventoryClickEvent e) {
         if( getOwnerRank().getLevel() <= itemPermitions.get( e.getCurrentItem().getType() ).getLevel() ) {
             switch (e.getCurrentItem().getType()) {
-                case DIAMOND_HELMET:
-                    new MembersListMenu(playerMenuUsage, Rank.TRUSTED).open();
+                case LIGHT_BLUE_BANNER:
+                    e.getWhoClicked().closeInventory();
                     break;
 
-                case IRON_HELMET:
-                    new MembersListMenu(playerMenuUsage, Rank.MEMBER).open();
+                case YELLOW_BANNER:
+                    e.getWhoClicked().closeInventory();
+                    break;
+
+                case GREEN_BANNER:
+                    e.getWhoClicked().closeInventory();
+                    break;
+
+                case RED_BANNER:
+                    e.getWhoClicked().closeInventory();
                     break;
 
                 case WHITE_BANNER:
                     new GuildMenu(playerMenuUsage).open();
                     break;
-
             }
         }
         else {
@@ -68,42 +71,49 @@ public class MembersMenu extends Menu {
         }
     }
 
-
     @Override
     public void setMenuItems() {
         ItemMeta meta;
         ArrayList<String> lore;
 
-
-        // Золотой шлем
-        ItemStack leader = new ItemStack(Material.GOLDEN_HELMET, 1);
-        Guild g = playerMenuUsage.getGuild();
-        meta = leader.getItemMeta();
-        meta.setDisplayName("Глава");
+        // Голубой флаг
+        ItemStack level1 = new ItemStack(Material.LIGHT_BLUE_BANNER, 1);
+        meta = level1.getItemMeta();
+        meta.setDisplayName("Уровень 1");
         lore = new ArrayList<>();
-        lore.add(g.getLeader().getName());
+        lore.add("Стоимость 5");
         meta.setLore(lore);
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        leader.setItemMeta(meta);
+        level1.setItemMeta(meta);
 
 
-        // Алмазный шлем
-        ItemStack trusted = new ItemStack(Material.DIAMOND_HELMET, 1);
-        meta = trusted.getItemMeta();
-        meta.setDisplayName("Список заместителей");
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        trusted.setItemMeta(meta);
+        // Желтый флаг
+        ItemStack level2 = new ItemStack(Material.YELLOW_BANNER, 1);
+        meta = level2.getItemMeta();
+        meta.setDisplayName("Уровень  2");
+        lore = new ArrayList<>();
+        lore.add("Стоимость 10");
+        meta.setLore(lore);
+        level2.setItemMeta(meta);
 
 
-        // Железный шлем
-        ItemStack soldier = new ItemStack(Material.IRON_HELMET, 1);
-        meta = soldier.getItemMeta();
-        meta.setDisplayName("Список рядовых");
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.addItemFlags(ItemFlag.HIDE_PLACED_ON);
-        soldier.setItemMeta(meta);
+        // Зеленый флаг
+        ItemStack level3 = new ItemStack(Material.GREEN_BANNER, 1);
+        meta = level3.getItemMeta();
+        meta.setDisplayName("Уровень 3");
+        lore = new ArrayList<>();
+        lore.add("Стоимость 15");
+        meta.setLore(lore);
+        level3.setItemMeta(meta);
+
+
+        // Красный флаг
+        ItemStack level4 = new ItemStack(Material.RED_BANNER, 1);
+        meta = level4.getItemMeta();
+        meta.setDisplayName("Уровень 4");
+        lore = new ArrayList<>();
+        lore.add("Стоимость 20");
+        meta.setLore(lore);
+        level4.setItemMeta(meta);
 
 
         //Left банер
@@ -121,11 +131,11 @@ public class MembersMenu extends Menu {
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         left.setItemMeta(meta);
 
-
         inventory.setItem(4, left);
-        inventory.setItem(11, leader);
-        inventory.setItem(13, trusted);
-        inventory.setItem(15, soldier);
+        inventory.setItem(10, level1);
+        inventory.setItem(12, level2);
+        inventory.setItem(14, level3);
+        inventory.setItem(16, level4);
 
     }
 }

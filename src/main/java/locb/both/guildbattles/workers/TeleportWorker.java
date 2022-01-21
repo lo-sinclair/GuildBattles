@@ -60,7 +60,7 @@ public class TeleportWorker {
                 if(!ps.getLocation().equals(startLoc)) {
                     ps.sendMessage(Messages.getPrefix() + "Телепортация отменяется, т.к. вы сдвинулись с места");
                     for (Player p : tpPlayers){
-                        ps.sendMessage(Messages.getPrefix() + "Телепортация отменяется!");
+                        p.sendMessage(Messages.getPrefix() + "Телепортация отменяется!");
                     }
                     startScheduler.cancel();
                 }
@@ -78,6 +78,7 @@ public class TeleportWorker {
         if (g.getHome().isEmpty()) return;
 
         tpPlayers.add(ps);
+        ps.sendMessage(Messages.getPrefix() + ChatColor.GREEN + "Телепортация в дом гильдии начнется через " + delay  + " сек.");
         startScheduler = pl.getServer().getScheduler().runTaskTimer(pl, new Runnable() {
             int stopwatch = 0;
 

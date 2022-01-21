@@ -35,7 +35,8 @@ public class MoneyCommand implements ISubCommand {
         }
 
         if (args.length < 3) {
-            commandSender.sendMessage(ChatColor.RED + "Не хватает аргументов!");
+            commandSender.sendMessage(ChatColor.RED + "Не хватает аргументов!\n" +
+                    ChatColor.RESET + "/guild money send [Название_гильдии] + [сумма]");
             return true;
         }
 

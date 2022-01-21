@@ -1,6 +1,7 @@
 package locb.both.guildbattles.gui.menu;
 
 import locb.both.guildbattles.GuildBattles;
+import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.gui.PeginateMenu;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
@@ -55,6 +56,7 @@ public class MembersListMenu extends PeginateMenu {
         List<OfflinePlayer> players = gManager.guildPlayers(playerMenuUsage.getGuild(), role);
 
         if( rank.getLevel() > itemPermitions.get( e.getCurrentItem().getType() ).getLevel() ) {
+            e.getWhoClicked().sendMessage(Messages.getPrefix() + ChatColor.RED + "У вас недостаточно высокий ранг, чтобы использовать эту команду!");
             return;
         }
 
