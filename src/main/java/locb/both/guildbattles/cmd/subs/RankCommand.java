@@ -1,6 +1,5 @@
 package locb.both.guildbattles.cmd.subs;
 
-import com.mojang.brigadier.Message;
 import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.cmd.ISubCommand;

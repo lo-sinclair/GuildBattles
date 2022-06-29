@@ -4,11 +4,9 @@ import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.gui.Menu;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
 import locb.both.guildbattles.managers.GuildManager;
-import net.minecraft.network.protocol.game.PacketPlayOutOpenBook;
-import net.minecraft.world.EnumHand;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -45,15 +43,11 @@ public class NoGuildMenu extends Menu {
 
             case WRITTEN_BOOK:
                 ItemStack item = e.getCurrentItem();
-
-                CraftPlayer p = (CraftPlayer)playerMenuUsage.getOwner();
-
+                Player p = playerMenuUsage.getOwner();
                 int slot = p.getInventory().getHeldItemSlot();
                 ItemStack old = p.getInventory().getItem(slot);
                 p.getInventory().setItem(slot, item);
-
-                e.getWhoClicked().closeInventory();
-                p.getHandle().b.sendPacket(new PacketPlayOutOpenBook(EnumHand.a));
+                p.openBook(item);
                 p.getInventory().setItem(slot, old);
 
                 break;

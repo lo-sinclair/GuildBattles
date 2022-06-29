@@ -1,0 +1,65 @@
+mySQL:
+  enable: false
+  host: localhost
+  port: 3306
+  dbname: database
+  user: user
+  password: password
+
+messages:
+  plugin_prefix: "&b[GuildBattles]"
+  menu:
+    noGuild:
+      create_guild:
+        title: "Создать гильдию"
+        description: "Стоимость: 10 монет"
+      info:
+        title: "Информация"
+        description: "Прочти меня"
+        content: "После создания гильдии вам нужно набрать минимум 5 игроков для полного доступа к функциям гильдии\nГильдия автоматически удаляется если глава выходит или был неактивен в игре 2 недели.\n Все стоимости (монеты) высчитываются с казны гильдии. \n Для того, чтобы написать в чат гильдии, пропишите /c <сообщение>. \n Подробнее можно прочитать в нашем дискорд канале, в чате &lguild-info&r."
+    guild:
+      guild:
+        title: ""
+        description: ""
+      members_list:
+        title: "Список участников"
+        description: ""
+      call:
+        title: "Созвать гильдию"
+        description: "Телепортировать всех согильдейцев к себе \nСтоимость: 10 монет"
+      storage:
+        title: "Склад гильдии"
+        description1: "ЛКМ: Открыть склад гильдии\nПКМ: Изменить доступ только главе"
+        description2: "ЛКМ: Открыть склад гильдии\nПКМ: Изменить доступ главе и заместителям"
+      house:
+        title: "Дом гильдии"
+        description1: "ЛКМ: Телепортироваться в дом гильдии\nПКМ: Установить точку гильдийного дома\nСтоимость: 20 монет"
+        description2: "ЛКМ: Телепортироваться в дом гильдии\nПКМ: Удалить точку гильдийного дома"
+      battle:
+        title: "Битва гильдий"
+        description: ""
+      private:
+        title: "Приват территории"
+        description: ""
+      treasury:
+        title: "Казна"
+        description: "ЛКМ: Пополнить казну\nПКМ: Перевод монет другой гильдии"
+      invite:
+        title: "Пригласить игроков"
+        description: ""
+      store:
+        title: "Магазин гильдии"
+        description: ""
+      alliances:
+        title: "Союзы"
+        description: "(Скоро)"
+      friendlyFire:
+        title: "Огонь по своим"
+        description: ""
+      leave:
+        title: "Выйти из гильдии"
+        description: ""
+        
+        
+      
+      

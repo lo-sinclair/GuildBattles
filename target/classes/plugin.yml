@@ -1,5 +1,5 @@
 name: GuildBattles
-version: ${project.version}
+version: 1.0-SNAPSHOT
 main: locb.both.guildbattles.GuildBattles
 api-version: 1.18
 commands:

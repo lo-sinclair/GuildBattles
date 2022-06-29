@@ -23,9 +23,12 @@ import org.bukkit.entity.Player;
 
 public class TerritoryManager {
     GuildBattles pl;
+    private RegionContainer regionContainer;
+
 
     public TerritoryManager(){
         pl = GuildBattles.getInstance();
+        regionContainer = WorldGuard.getInstance().getPlatform().getRegionContainer();
     }
 
 
@@ -61,10 +64,9 @@ public class TerritoryManager {
             return false;
         }
 
-        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        RegionManager regionManager = container.get(BukkitAdapter.adapt(loc.getWorld()));
+        RegionManager regionManager = regionContainer.get(BukkitAdapter.adapt(loc.getWorld()));
 
-        RegionQuery query = container.createQuery();
+        RegionQuery query = regionContainer.createQuery();
 
         BlockVector3 v = BukkitAdapter.asBlockVector(loc);
         ApplicableRegionSet set = regionManager.getApplicableRegions(v);
@@ -82,7 +84,7 @@ public class TerritoryManager {
         }
 
         String region_name = guild.getName() + "_" + this.locationToString(loc);
-        BlockVector3 min = BlockVector3.at(loc.getBlockX()-15, 0, loc.getBlockZ()-15);
+        BlockVector3 min = BlockVector3.at(loc.getBlockX()-15, -64, loc.getBlockZ()-15);
         BlockVector3 max = BlockVector3.at(loc.getBlockX()+15, 255, loc.getBlockZ()+15);
         ProtectedRegion region = new ProtectedCuboidRegion(region_name, min, max);
 
@@ -175,10 +177,10 @@ public class TerritoryManager {
         return true;
     }
 
+
     public ProtectedRegion getGuildRegion(Guild guild){
 
-        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-        RegionManager regionManager = container.get(BukkitAdapter.adapt(Bukkit.getWorld("world")));
+        RegionManager regionManager = regionContainer.get(BukkitAdapter.adapt(Bukkit.getWorld("world")));
         ProtectedRegion region = regionManager.getRegion(guild.getTerritory());
 
         return region;
@@ -189,9 +191,14 @@ public class TerritoryManager {
         return loc.getWorld().getName() + "_" + loc.getBlockX() + "_" + loc.getBlockY() + "_" + loc.getBlockZ();
     }
 
+
     public static Location stringToLocation(String strLoc) {
         String[] parts = strLoc.split("_");
         return new Location(Bukkit.getWorld(parts[0]), Double.parseDouble(parts[1]), Double.parseDouble(parts[2]), Double.parseDouble(parts[3]));
     }
 
+
+    public RegionContainer getRegionContainer() {
+        return regionContainer;
+    }
 }

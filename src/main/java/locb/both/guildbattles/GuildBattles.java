@@ -1,10 +1,12 @@
 package locb.both.guildbattles;
 
+import locb.both.guildbattles.cmd.EcoCommand;
 import locb.both.guildbattles.cmd.GuildCommand;
 import locb.both.guildbattles.cooldowns.TimeCooldown;
 import locb.both.guildbattles.data.SQLDatabase;
 import locb.both.guildbattles.data.YAML;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
+import locb.both.guildbattles.listeners.BlockListener;
 import locb.both.guildbattles.listeners.DamageListener;
 import locb.both.guildbattles.listeners.MenuListener;
 import locb.both.guildbattles.managers.*;
@@ -20,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Listener {
+public final class GuildBattles<inviteCoolDown> extends JavaPlugin  {
     private static GuildBattles instance;
     Logger log = Logger.getLogger("Minecraft");
     private SQLDatabase db;
@@ -73,8 +75,10 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
 
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
         Bukkit.getPluginManager().registerEvents(new DamageListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new BlockListener(this), this);
 
         getCommand("guild").setExecutor(new GuildCommand(this));
+        getCommand("coins").setExecutor(new EcoCommand());
 
     }
 
@@ -127,7 +131,7 @@ public final class GuildBattles<inviteCoolDown> extends JavaPlugin implements Li
     public RankManager getRankManager() {
         return rankManager;
     }
-    public TerritoryManager getPrivatManager() {
+    public TerritoryManager getTerritoryManager() {
         return territoryManager;
     }
     public TeleportManager getTeleportManager() {return teleportManager;}

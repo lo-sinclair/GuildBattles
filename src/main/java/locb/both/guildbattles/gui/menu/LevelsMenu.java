@@ -5,11 +5,16 @@ import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.gui.Menu;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
 import locb.both.guildbattles.model.Guild;
+import locb.both.guildbattles.tools.CraftTools;
+import locb.both.guildbattles.workers.TeleportWorker;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -47,6 +52,16 @@ public class LevelsMenu extends Menu {
             switch (e.getCurrentItem().getType()) {
                 case LIGHT_BLUE_BANNER:
                     e.getWhoClicked().closeInventory();
+                    TeleportWorker tpw = new TeleportWorker((Player) e.getWhoClicked());
+                    tpw.tpToBattle("level1", 15);
+
+                    ItemStack item = CraftTools.craftAltarStager();
+                    if ( CraftTools.InventoryIsFree(e.getWhoClicked().getInventory(), item) ) {
+                        e.getWhoClicked().getInventory().addItem(item);
+                    }
+                    else {
+                        e.getWhoClicked().getWorld().dropItem(e.getWhoClicked().getLocation().add(0,1,0), item);
+                    }
                     break;
 
                 case YELLOW_BANNER:

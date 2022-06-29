@@ -95,7 +95,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-target/
+#target/
+deploy.sh
 
 pom.xml.tag
 pom.xml.releaseBackup
@@ -111,5 +112,3 @@ buildNumber.properties
 
 # Common working directory
 run/
-
-deploy.sh

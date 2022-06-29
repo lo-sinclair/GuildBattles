@@ -1,5 +1,12 @@
 package locb.both.guildbattles.workers;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flag;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 import locb.both.guildbattles.GuildBattles;
 import locb.both.guildbattles.Messages;
 import locb.both.guildbattles.gui.GuiToolKit;
@@ -31,6 +38,12 @@ public class TeleportWorker {
 
 
     public void tpGuildtoLeader(int delay){
+        Guild guild = pl.getDb().findGuildByMember(ps.getName());
+        if(!pl.getGuildManager().takeGuildMoney(guild, 10.0)) {
+            ps.sendMessage(Messages.getPrefix() + ChatColor.RED + "На счету гильдии недостаточно монет!");
+            return;
+        }
+
         Location startLoc = ps.getLocation();
 
         Guild g = pl.getDb().findGuildByMember(ps.getName());
@@ -95,6 +108,44 @@ public class TeleportWorker {
 
             }
         }, 0L, 20L);
+
+    }
+
+    public void tpToBattle(String regionName, int delay){
+        RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+        RegionManager regionManager = container.get(BukkitAdapter.adapt(Bukkit.getWorld("world")));
+        ProtectedRegion region = regionManager.getRegion(regionName);
+        if(region == null) return;
+
+        com.sk89q.worldedit.util.Location teleLoc = region.getFlag(Flags.TELE_LOC);
+        if (teleLoc == null)  return;
+
+        Guild guild = pl.getDb().findGuildByMember(ps.getName());
+        if(!pl.getGuildManager().takeGuildMoney(guild, 20.0)) {
+            ps.sendMessage(Messages.getPrefix() + ChatColor.RED + "На счету гильдии недостаточно монет!");
+            return;
+        }
+
+        tpPlayers.add(ps);
+        ps.sendMessage(Messages.getPrefix() + ChatColor.GREEN + "Телепортация на поле боя начнется через " + delay  + " сек.");
+        startScheduler = pl.getServer().getScheduler().runTaskTimer(pl, new Runnable() {
+            int stopwatch = 0;
+
+            @Override
+            public void run() {
+                if(stopwatch > delay) {
+                    teleport(BukkitAdapter.adapt(teleLoc));
+                    ps.sendMessage(Messages.getPrefix() + "Вы телепортированы на поле боя!");
+
+                    startScheduler.cancel();
+                }
+                ps.spawnParticle(Particle.PORTAL, ps.getLocation(), 32, 0.6, 0.8, 0.6);
+                stopwatch++;
+
+            }
+        }, 0L, 20L);
+
+
 
     }
 

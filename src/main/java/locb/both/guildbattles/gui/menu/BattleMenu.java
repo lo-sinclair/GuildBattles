@@ -5,14 +5,11 @@ import locb.both.guildbattles.Rank;
 import locb.both.guildbattles.gui.Menu;
 import locb.both.guildbattles.gui.PlayerMenuUsage;
 import locb.both.guildbattles.model.Guild;
-import net.minecraft.network.protocol.game.PacketPlayOutOpenBook;
-import net.minecraft.world.EnumHand;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -27,7 +24,7 @@ public class BattleMenu extends Menu {
     public BattleMenu(PlayerMenuUsage playerMenuUsage) {
         super(playerMenuUsage);
         //временное решение для хранения прав
-        itemPermitions.put(Material.BELL, Rank.LEADER);
+        itemPermitions.put(Material.POPPY, Rank.LEADER);
         itemPermitions.put(Material.ENDER_PEARL, Rank.LEADER);
         itemPermitions.put(Material.WRITTEN_BOOK, Rank.LEADER);
         itemPermitions.put(Material.WHITE_BANNER, Rank.LEADER);
@@ -47,7 +44,7 @@ public class BattleMenu extends Menu {
     public void handleMenu(InventoryClickEvent e) {
         if( getOwnerRank().getLevel() <= itemPermitions.get( e.getCurrentItem().getType() ).getLevel() ) {
             switch (e.getCurrentItem().getType()) {
-                case BELL:
+                case POPPY:
                     new LevelsMenu(playerMenuUsage).open();
                     break;
 
@@ -57,14 +54,13 @@ public class BattleMenu extends Menu {
 
                 case WRITTEN_BOOK:
                     ItemStack item = e.getCurrentItem();
-                    CraftPlayer p = (CraftPlayer)playerMenuUsage.getOwner();
+                    Player p = playerMenuUsage.getOwner();
                     int slot = p.getInventory().getHeldItemSlot();
                     ItemStack old = p.getInventory().getItem(slot);
                     p.getInventory().setItem(slot, item);
-
-                    e.getWhoClicked().closeInventory();
-                    p.getHandle().b.sendPacket(new PacketPlayOutOpenBook(EnumHand.a));
+                    p.openBook(item);
                     p.getInventory().setItem(slot, old);
+
                     break;
 
                 case WHITE_BANNER:
@@ -83,7 +79,7 @@ public class BattleMenu extends Menu {
         ArrayList<String> lore;
 
         // Колокол
-        ItemStack battle = new ItemStack(Material.BELL, 1);
+        ItemStack battle = new ItemStack(Material.POPPY, 1);
         Guild g = playerMenuUsage.getGuild();
         meta = battle.getItemMeta();
         meta.setDisplayName("Участвовать в битве");
